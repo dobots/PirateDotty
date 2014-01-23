@@ -72,7 +72,7 @@ void onDrive(int left, int right) {
 	right = capSpeed(right);
 	left = capSpeed(left);
 
-	LOGd(3, "hanldeDriveCommand (%d, %d)", leftSpeed, rightSpeed);
+	LOGd(3, "hanldeDriveCommand (%d, %d)", left, right);
 	drive(left, right);
 }
 
