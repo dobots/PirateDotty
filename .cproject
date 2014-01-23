@@ -23,6 +23,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/AccelStepper}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/aJson}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/aJson/utility}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/DoBotsLib}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.cpp.sketch.input.1790174623" name="CPP source files" superClass="it.baeyens.arduino.compiler.cpp.sketch.input"/>
 							</tool>
@@ -32,6 +33,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/includes}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/aJson}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/aJson/utility}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/PirateDotty/Libraries/DoBotsLib}&quot;"/>
 								</option>
 								<inputType id="it.baeyens.arduino.compiler.c.sketch.input.1879586347" name="C Source Files" superClass="it.baeyens.arduino.compiler.c.sketch.input"/>
 							</tool>

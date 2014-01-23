@@ -11,8 +11,8 @@
 
 unsigned long lastMove;
 
-int DEFAULT_SPEED = 220;
-int RADIUS_OFFSET = 35;
+int DEFAULT_SPEED = 255;
+int RADIUS_OFFSET = 55;
 
 void initRandomWalk() {
 	randomSeed(1);
@@ -27,7 +27,7 @@ void randomWalk() {
 		LOGd(1, "randomWalk..");
 
 		int move = random(1, 8);
-		int duration = random(1, 10);
+		int duration = random(1, 4);
 
 		LOGd(3, "move: %d, duration: %d", move, duration);
 
@@ -70,12 +70,12 @@ void moveForward(long duration) {
 
 void moveLeftForward(long duration) {
 	LOGd(1, "moveLeftForward, %d s", duration);
-	drive(DEFAULT_SPEED - RADIUS_OFFSET, DEFAULT_SPEED + RADIUS_OFFSET);
+	drive(DEFAULT_SPEED - RADIUS_OFFSET, DEFAULT_SPEED);
 }
 
 void moveRightForward(long duration) {
 	LOGd(1, "moveRightForward, %d s", duration);
-	drive(DEFAULT_SPEED + RADIUS_OFFSET, DEFAULT_SPEED - RADIUS_OFFSET);
+	drive(DEFAULT_SPEED, DEFAULT_SPEED - RADIUS_OFFSET);
 }
 
 
@@ -86,12 +86,12 @@ void moveBackward(long duration) {
 
 void moveLeftBackward(long duration) {
 	LOGd(1, "moveLeftBackward, %d s", duration);
-	drive(-(DEFAULT_SPEED - RADIUS_OFFSET), -(DEFAULT_SPEED + RADIUS_OFFSET));
+	drive(-(DEFAULT_SPEED - RADIUS_OFFSET), -DEFAULT_SPEED);
 }
 
 void moveRightBackward(long duration) {
 	LOGd(1, "moveRightBackward, %d s", duration);
-	drive(-(DEFAULT_SPEED + RADIUS_OFFSET), -(DEFAULT_SPEED - RADIUS_OFFSET));
+	drive(-DEFAULT_SPEED, -(DEFAULT_SPEED - RADIUS_OFFSET));
 }
 
 

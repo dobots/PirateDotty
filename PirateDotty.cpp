@@ -29,13 +29,8 @@ void loop()
 {
 	receiveCommands();
 
-//	if (isRemoteControl) {
-//		checkRemoteControlTimeout();
-//	} else {
-//		randomWalk();
-//	}
-
 	if (millis() > (lastActivity + INACTIVITY_TIMEOUT)) {
 		randomWalk();
 	}
+
 }
