@@ -18,6 +18,7 @@
 #endif
 
 int log_level = 3;
+//int log_level = 1;
 
 // --------------------------------------------------------------------
 // LOCAL VAR
@@ -43,6 +44,7 @@ Stream* serialLine;
 
 
 void initLogging(Stream *stream) {
+
 }
 
 char buf[KPRINTF_BUF_SIZE];
@@ -75,7 +77,7 @@ int kprintf(const char *format, ...)  {
     va_end (args);
     // the below assumes that the new data will fit into the I/O buffer. If not, Serial may drop it.
     //   if Serial had a get free buffer count, we could delay and retry. Such does exist at the device class level, but not at this level.
-    n = strlen(buf) - Serial.print(buf); // move chars to I/O buffer, freeing up local buf
+    n = strlen(buf) - Serial2.print(buf); // move chars to I/O buffer, freeing up local buf
 #ifdef _FREE_RTOS_
     xSemaphoreGive(kprintfLock);
 #endif
@@ -96,8 +98,8 @@ void LOGi(const int loglevel, const char* fmt, ... )
 		va_end(argptr);
 	    // the below assumes that the new data will fit into the I/O buffer. If not, Serial may drop it.
 	    //   if Serial had a get free buffer count, we could delay and retry. Such does exist at the device class level, but not at this level.
-	    int n = strlen(buf) - Serial.print(buf); // move chars to I/O buffer, freeing up local buf
-	    Serial.println(" ");
+	    int n = strlen(buf) - Serial2.print(buf); // move chars to I/O buffer, freeing up local buf
+	    Serial2.println(" ");
 	}
 }
 
@@ -113,8 +115,8 @@ void LOGd(const int loglevel, const char* fmt, ... )
 		va_end(argptr);
 	    // the below assumes that the new data will fit into the I/O buffer. If not, Serial may drop it.
 	    //   if Serial had a get free buffer count, we could delay and retry. Such does exist at the device class level, but not at this level.
-	    int n = strlen(buf) - Serial.print(buf); // move chars to I/O buffer, freeing up local buf
-	    Serial.println(" ");
+	    int n = strlen(buf) - Serial2.print(buf); // move chars to I/O buffer, freeing up local buf
+	    Serial2.println(" ");
 	}
 }
 

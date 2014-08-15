@@ -11,7 +11,8 @@
 
 unsigned long lastMove;
 
-int DEFAULT_SPEED = 255;
+//int DEFAULT_SPEED = 255;
+int DEFAULT_SPEED = 200;
 int RADIUS_OFFSET = 55;
 
 void initRandomWalk() {

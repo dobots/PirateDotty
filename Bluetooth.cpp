@@ -9,6 +9,7 @@
 #include "Bluetooth.h"
 #include "Actuator.h"
 #include "messenger.h"
+#include "IRHoming.h"
 
 Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive);
 
@@ -17,21 +18,26 @@ void initBluetooth(Stream *stream) {
 }
 
 void handleInput(int incoming) {
+
 	switch(incoming) {
-	case '8':
-		drive(255, 255);
+	case 'w':
+		drive(55, 55);
 		break;
-	case '2':
-		drive(-255, -255);
+	case 's':
+		drive(-55, -55);
 		break;
-	case '4':
-		drive(-255, 255);
+	case 'a':
+		drive(-55, 55);
 		break;
-	case '6':
-		drive(255, -255);
+	case 'd':
+		drive(55, -55);
 		break;
-	case '5':
+	case 'q':
+	case 'e':
 		drive(0, 0);
+		break;
+	case 'h':
+		switchHoming();
 		break;
 	default:
 		LOGd(1, "incoming: %c (%d)", incoming, incoming);
@@ -42,17 +48,18 @@ void handleInput(int incoming) {
 void receiveCommands() {
 
 #ifdef DEBUG
-	if (Serial.available()) {
-		int incoming = Serial.read();
+	if (Serial2.available()) {
+		int incoming = Serial2.read();
 		handleInput(incoming);
 
 		lastActivity = millis();
 	}
-#endif
-
+#else
 	if (messenger.handleMessages()) {
 		lastActivity = millis();
 	}
+#endif
+
 }
 
 void onControl(boolean enabled) {
@@ -66,13 +73,16 @@ void onDisconnect(aJsonObject* json) {
 void onSensorRequest(aJsonObject* json) {
 	LOGd(3, "onSensorRequest");
 //	sendData();
+//	sendIRData();
+	switchHoming();
+//	switchPower();
 }
 
 void onDrive(int left, int right) {
 	right = capSpeed(right);
 	left = capSpeed(left);
 
-	LOGd(3, "hanldeDriveCommand (%d, %d)", left, right);
+	LOGd(3, "handleDriveCommand (%d, %d)", left, right);
 	drive(left, right);
 }
 

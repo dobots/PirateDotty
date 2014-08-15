@@ -9,6 +9,7 @@
 #include "Arduino.h"
 //add your includes for the project PirateDotty here
 
+#include "Debug.h"
 #include "Pinout.h"
 //#include "aJSON.h"
 #include "Log.h"
@@ -26,6 +27,7 @@ void setup();
 //add your function definitions for the project PirateDotty here
 
 #define INACTIVITY_TIMEOUT 60000 // 60 seconds
+#define INACTIVITY_TIMEOUT2 300000 // 300 seconds
 
 extern bool isRemoteControl;
 extern long lastActivity;

@@ -1,36 +1,100 @@
-// Do not remove the include below
 #include "PirateDotty.h"
+
 #include "Actuator.h"
 #include "Bluetooth.h"
+#include "IRHoming.h"
 #include "Log.h"
+#include "Pinout.h"
 #include "RandomWalk.h"
+#include "Sensor.h"
 
-bool isRemoteControl = false;
+bool isRemoteControl = true;
 long lastActivity = 0;
+
+bool homing=true;
+bool randoming=false;
+bool dismount = false;
 
 //The setup function is called once at startup of the sketch
 void setup()
 {
+	Serial.begin(115200);
 	Serial1.begin(115200);
-	Serial2.begin(115200);
+	Serial2.begin(115200);	// Bluetooth
 
+	initSensors();
 	initActuators();
 	initBluetooth(&Serial2);
-
 	initRandomWalk();
+	initIRHoming();
 
 	ledON(STATE_LED);
 
-	LOGi(0, "initialisation done ...");
+//	pinMode(A14,INPUT);
+
+//	for(int i=0;i<23;i++){
+//		pinMode(UNUSED[i],OUTPUT);
+//	}
+
+	LOGi(0, "\n\n\n\n\ninitialisation done ...");
 }
 
 // The loop function is called in an endless loop
 void loop()
 {
-	receiveCommands();
+//	readBatteryState();
 
-	if (millis() > (lastActivity + INACTIVITY_TIMEOUT)) {
+	IRhomeWalk();
+//	drive(255,255);
+//	int spd = 20;
+//	drive(spd,spd);
+
+
+
+	/*
+	int value = analogRead(A14);
+	if(homing && value>800){
+		homing=false;
+		dostop();
+		lastActivity = millis();
+	}
+//	if(value<100){
+//		homing=true;
+//	}
+//	Serial.println(value);
+
+	if(homing){
+		IRhomeWalk();
+	} else if(randoming){
 		randomWalk();
+	} else if(dismount){
+		drive(-100,-100);
+		delay(4000);
+		dostop();
+		dismount=false;
+		homing=false;
+		randoming=true;
+		lastActivity=millis();
 	}
 
+	if(!homing && millis()>(lastActivity + INACTIVITY_TIMEOUT)){ //1 minute on charger
+		dismount=true;
+		homing=false;
+		randoming=false;
+	} else if(randoming && millis()>(lastActivity + INACTIVITY_TIMEOUT2)){ // 5 minutes driving
+		randoming=false;
+		dismount=false;
+		homing=true;
+	}
+
+//	receiveCommands();
+
+//	if (millis() > (lastActivity + INACTIVITY_TIMEOUT)) {
+//		randomWalk();
+////		IRhomeWalk();
+//	}
+
+//	readSensors();
+	*/
+	receiveCommands();
 }
