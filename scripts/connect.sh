@@ -35,6 +35,8 @@ function showUsage {
 	echo
 }
 
+echo "$@"
+
 # check for option arguments
 while getopts ":t:p:h" optname; do
 	case "$optname" in

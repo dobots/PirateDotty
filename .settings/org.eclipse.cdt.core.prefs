@@ -758,13 +758,13 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.GNU0X/value=true
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LDSCRIPT/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LDSCRIPT/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LDSCRIPT/value=teensy/all/cores/teensy3/mk20dx256.ld
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LDSCRIPT/value=teensy/all/cores/teensy3/mk20dx128.ld
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKOPTION1/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKOPTION1/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKOPTION1/value=-mthumb
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKSCRIPT/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKSCRIPT/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKSCRIPT/value=mk20dx256.ld
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.LINKSCRIPT/value=mk20dx128.ld
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.MCU/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.MCU/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.MCU/value=cortex-m4
@@ -779,7 +779,7 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.OPTION2/value=-nostdlib
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.OPTION3/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.OPTION3/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.OPTION3/value=-D__MK20DX256__
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.OPTION3/value=-D__MK20DX128__
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.PATH/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.PATH/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.BUILD.PATH/value=${ProjDirPath}/${ConfigName}
@@ -863,7 +863,7 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.CONFIG
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.CONFIG.PATH/value=${A.TOOLS.AVRDUDE.CONFIG.PATH}
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.NAME/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.NAME/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.NAME/value=Teensy 3.1
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.NAME/value=Teensy 3.0
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.PATH/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.PATH/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.PATH/value=${A.TOOLS.BOSSAC.PATH}
@@ -884,7 +884,7 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.COMBINE.PATTERN/value="${A.COMPILER.SAM.PATH}arm-none-eabi-gcc"  -Os -Wl,--gc-sections -mcpu\=${A.BUILD.MCU} -mthumb "-T${A.RUNTIME.HARDWARE.PATH}/${A.BUILD.LDSCRIPT}" -o "${A.BUILD.PATH}/${A.BUILD.PROJECT_NAME}.elf" ${A.OBJECT_FILES} -L"${A.BUILD.PATH}" -lm
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.1/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.1/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.1/value="${A.COMPILER.SAM.PATH}arm-none-eabi-gcc" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib  -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} -DTIME_T\=1365449461 ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX256__  ${A.INCLUDES} 
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.1/value="${A.COMPILER.SAM.PATH}arm-none-eabi-gcc" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib  -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} -DTIME_T\=1365449461 ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX128__  ${A.INCLUDES} 
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.2/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.2/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.2/value=\ -o 
@@ -893,10 +893,10 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN.3/value=
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN/value="${A.COMPILER.SAM.PATH}arm-none-eabi-gcc" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib  -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} -DTIME_T\=1365449461 ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX256__  ${A.INCLUDES} "${A.SOURCE_FILE}" -o "${A.OBJECT_FILE}"
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.C.O.PATTERN/value="${A.COMPILER.SAM.PATH}arm-none-eabi-gcc" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib  -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} -DTIME_T\=1365449461 ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX128__  ${A.INCLUDES} "${A.SOURCE_FILE}" -o "${A.OBJECT_FILE}"
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.1/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.1/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.1/value="${A.COMPILER.SAM.PATH}arm-none-eabi-g++" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib -fno-rtti -fno-exceptions -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX256__  -felide-constructors -std\=gnu++0x ${A.INCLUDES} 
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.1/value="${A.COMPILER.SAM.PATH}arm-none-eabi-g++" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib -fno-rtti -fno-exceptions -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX128__  -felide-constructors -std\=gnu++0x ${A.INCLUDES} 
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.2/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.2/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.2/value=\ -o 
@@ -905,7 +905,7 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN.3/value=
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN/value="${A.COMPILER.SAM.PATH}arm-none-eabi-g++" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib -fno-rtti -fno-exceptions -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX256__  -felide-constructors -std\=gnu++0x ${A.INCLUDES} "${A.SOURCE_FILE}" -o "${A.OBJECT_FILE}"
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.CPP.O.PATTERN/value="${A.COMPILER.SAM.PATH}arm-none-eabi-g++" -c -g -Os -w -ffunction-sections -fdata-sections -nostdlib -fno-rtti -fno-exceptions -mcpu\=${A.BUILD.MCU} -DF_CPU\=${A.BUILD.F_CPU} ${A.BUILD.DEFINE0} ${A.BUILD.DEFINE1} -MMD -D${A.SOFTWARE}\=${A.RUNTIME.IDE.VERSION} ${A.BUILD.EXTRA_FLAGS} -mthumb  -D__MK20DX128__  -felide-constructors -std\=gnu++0x ${A.INCLUDES} "${A.SOURCE_FILE}" -o "${A.OBJECT_FILE}"
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.OBJCOPY.EEP.PATTERN.1/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.OBJCOPY.EEP.PATTERN.1/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.RECIPE.OBJCOPY.EEP.PATTERN.1/value="${A.COMPILER.SAM.PATH}arm-none-eabi-objcopy" -O ihex -j .eeprom --set-section-flags\=.eeprom\=alloc,load --no-change-warnings --change-section-lma .eeprom\=0 "${A.BUILD.PATH}/${A.BUILD.PROJECT_NAME}.elf" "${A.BUILD.PATH}/${A.BUILD.PROJECT_NAME}.eep"
@@ -980,10 +980,10 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.DISABLE_FLUSHING/value=true
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_RAM_SIZE/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_RAM_SIZE/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_RAM_SIZE/value=65536
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_RAM_SIZE/value=16384
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_SIZE/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_SIZE/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_SIZE/value=262144
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.MAXIMUM_SIZE/value=131072
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.PROTOCOL/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.PROTOCOL/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/A.UPLOAD.PROTOCOL/value=halfkay
@@ -998,7 +998,7 @@ environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.B
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.BOARDS_FILE/value=/home/dominik/Arduino/hardware/teensy/all/boards.txt
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.BOARD_NAME/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.BOARD_NAME/operation=replace
-environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.BOARD_NAME/value=Teensy 3.1
+environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.BOARD_NAME/value=Teensy 3.0
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.COM_PORT/delimiter=\:
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.COM_PORT/operation=replace
 environment/project/it.baeyens.arduino.core.toolChain.release.436739795/JANTJE.COM_PORT/value=/dev/ttyACM0

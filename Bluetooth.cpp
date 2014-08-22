@@ -10,6 +10,7 @@
 #include "Actuator.h"
 #include "messenger.h"
 #include "IRHoming.h"
+#include "Gunner.h"
 
 Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive);
 
@@ -38,6 +39,13 @@ void handleInput(int incoming) {
 		break;
 	case 'h':
 		switchHoming();
+		break;
+	case 32:
+		shoot = true;
+		break;
+	case 'c':
+		continuous = !continuous;
+		LOGd(1, "shoot continuous: %s", continuous ? "true" : "false");
 		break;
 	default:
 		LOGd(1, "incoming: %c (%d)", incoming, incoming);

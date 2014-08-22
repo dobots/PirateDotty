@@ -84,7 +84,7 @@ fi
 PORT=/dev/rfcomm$PORTNR
 
 # connect to the robot
-. ./connect.sh -t $TARGET -p $PORTNR
+./connect.sh -t $TARGET -p $PORTNR
 
 # start serial monitor
 print "start serial monitor ..." $ORANGE

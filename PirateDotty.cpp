@@ -7,6 +7,8 @@
 #include "Pinout.h"
 #include "RandomWalk.h"
 #include "Sensor.h"
+#include "IRHandler.h"
+#include "Gunner.h"
 
 bool isRemoteControl = true;
 long lastActivity = 0;
@@ -26,6 +28,7 @@ void setup()
 	initActuators();
 	initBluetooth(&Serial2);
 	initRandomWalk();
+	IR_HANDLER.initialize();
 	initIRHoming();
 
 	ledON(STATE_LED);
@@ -44,7 +47,11 @@ void loop()
 {
 //	readBatteryState();
 
-	IRhomeWalk();
+	IRHandler::loop();
+	gunner_loop();
+
+
+//	IRhomeWalk();
 //	drive(255,255);
 //	int spd = 20;
 //	drive(spd,spd);

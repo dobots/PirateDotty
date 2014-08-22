@@ -32,9 +32,8 @@
 #include "Pinout.h"
 #include "PirateDotty.h"
 #include "Sensor.h"
+#include "IRHandler.h"
 
-IRrecv irrecv_digi(IRRECEIVER);
-decode_results IRresults;
 bool GOHOME;
 bool CHARGING;
 unsigned long correctValue = 543819690;
@@ -47,7 +46,7 @@ int ROTATE_HOMING_SPEED = 50;
 int DEFAULT_HOMING_SPEED = 70;
 
 int lastDirection = 1;		// toggles between 1 and -1 for direction left & right
-int lastSignal = millis();
+int lastCheck = millis();
 int lastControl = millis();
 int lastSwitch = millis();
 int waitPeriod = 200;
@@ -55,7 +54,6 @@ int recvTimeout = 300;
 int searchTimeout = 20000;
 
 void initIRHoming(){
-	irrecv_digi.enableIRIn(); // Start the receiver
 	GOHOME = false;
 	CHARGING = false;
 }
@@ -85,33 +83,46 @@ void IRhomeWalk(){
 	// TODO: identify under which decoder the values are found!
 	// preferably apply that decoder directly for more speed?
 
+//	if(millis() >= lastSignal + waitPeriod){
+//
+//		int irReceived = irrecv_digi.decode(&IRresults);
+//		if (irReceived) {
+//
+//			lastSignal = millis();
+//			LOGd(1, "\tsignal recvd: %d", IRresults.value);
+//			irrecv_digi.resume();
+//		}
+//	}
+//
+//	return;
 
-	if(millis() >= lastSignal + waitPeriod){
+	if(millis() >= lastCheck + waitPeriod){
 
-		int irReceived = irrecv_digi.decode(&IRresults);
-		if (irReceived) {
-			lastSignal = millis();
+		if (IR_HANDLER.hasNewResult()) {
+			lastValue = IR_HANDLER.getResult();
+			lastCheck = millis();
+
 			sendIRData();
-			irrecv_digi.resume();
-//			sendLog("1");
-			LOGd(1, "\tsignal recvd: %d", IRresults.value);
-		} else if (millis() >= lastSignal + recvTimeout) {
-			lastSignal = millis();
-			sendNull();
+
+//			LOGd(1, "\tsignal recvd: %d", IRresults.value);
+//			irrecv_digi.resume();
+		} else if (millis() >= lastCheck + recvTimeout) {
+			lastCheck = millis();
+//			sendNull();
 			errorCount = 5;
 //			sendLog("2");
 			LOGd(1, "\trecv timeout");
 		}
 
 		if(GOHOME){
-			if(irReceived){
-				if(IRresults.value==correctValue){
+			if(IR_HANDLER.hasNewResult()){
+				if(lastValue==correctValue){
 					LOGd(1, "  homing fwd");
 //					errorCount = 0;
 
 					lastControl = millis();
 					doDrive(DEFAULT_HOMING_SPEED,DEFAULT_HOMING_SPEED);
-					lastValue = IRresults.value;
+//					lastValue = IRresults.value;
 //					lastDirection = 1;
 //					sendLog("3");
 				} else {
@@ -128,7 +139,7 @@ void IRhomeWalk(){
 
 						lastControl = millis();
 						doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
-						lastValue = IRresults.value;
+//						lastValue = IRresults.value;
 //					}
 //					++errorCount;
 //					sendLog("4");
@@ -146,6 +157,7 @@ void IRhomeWalk(){
 					LOGd(1, "  homing bwd");
 
 					lastControl = millis() + recvTimeout / 2;
+					lastValue = -1;
 					errorCount = 0;
 					doDrive(-1*DEFAULT_HOMING_SPEED, -1*DEFAULT_HOMING_SPEED);
 //					sendLog("6");
@@ -296,7 +308,7 @@ void disableHoming(){
 void sendIRData(){
 	aJsonObject * IRData;
     IRData = createSensorData();
-    addSensorValue(IRData, "IR command received", (int)IRresults.value);
+    addSensorValue(IRData, "IR command received", (int)IR_HANDLER.getResult());
     sendMessage(IRData);
 }
 
