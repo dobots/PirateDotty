@@ -28,65 +28,79 @@
 #include "IRHandler.h"
 #include "Log.h"
 #include "Actuator.h"
+#include "Looper.h"
 
 unsigned int IR_GUN_SHOT_SEND[] = {1000, 1000, 1000, 1000, 1000};
 
 bool shoot = false;
 bool continuous = false;
-int lastShot = millis();
-int lastDetect = millis();
-int lastShotDetect = millis();
-int timeout = 200;
+int lastShotDetect = 0;
 int shotCount = 0;
+int nextShot = 0;
 
-void gunner_loop() {
+bool detectShot();
+void hitDetected();
 
-//	if (continuous) {
-//		shoot = true;
-//	}
+void gunner_init() {
+	Looper::registerLoopFunc(gunner_loop);
+}
 
-	if (shoot && (millis() > lastShot + timeout)) {
-		shootGuns();
+int gunner_loop() {
+
+	// shoot
+	if (continuous) {
+		shoot = true;
+	}
+
+	if (shoot && Looper::now() > nextShot) {
+		LOGd(1, "SHOOT");
+		IRHandler::getInstance()->send(IR_GUN_SHOT_SEND, 5);
 		shoot = false;
-		lastShot = millis();
 	}
 
-	if (millis() > lastDetect + timeout) {
-		if (detectShot()) {
-			lastShotDetect = millis();
-		}
-		if (shotCount == 3) {
-			hitDetected();
-		}
-		lastDetect = millis();
+	// check if shot
+	if (detectShot()) {
+		lastShotDetect = Looper::now();
 	}
 
-	if (millis() > lastShotDetect + 1000) {
+	if (shotCount == 3) {
+		hitDetected();
 		shotCount = 0;
 	}
 
+	if (Looper::now() > lastShotDetect + HIT_TIMEOUT) {
+		shotCount = 0;
+	}
+
+	return 1000 / GUNNER_FREQ;
 }
 
 void shootGuns() {
+	if (shoot == false) {
+		nextShot += SHOOT_DELAY;
+		shoot = true;
+	}
+}
 
-	LOGd(1, "SHOOT");
-	IR_HANDLER.send(IR_GUN_SHOT_SEND, 5);
-
+void setContinuous(bool value) {
+	continuous = value;
 }
 
 bool detectShot() {
 
 	bool shotDetected = false;
-	if (IR_HANDLER.hasNewResult()) {
+	if (IRHandler::getInstance()->hasNewResult()) {
 
-		unsigned long lastResult = IR_HANDLER.getResult();
+		unsigned long lastResult = IRHandler::getInstance()->getResult();
 
 		if (lastResult == IR_GUN_SHOT) {
+			// clear the result so that in the next iteration we don't try to read the same result again
+			IRHandler::getInstance()->clearResult();
+
 			shotDetected = true;
 			++shotCount;
 			LOGd(1, "shot %d detected", shotCount);
 		}
-
 	}
 
 	return shotDetected;
@@ -104,4 +118,5 @@ void hitDetected() {
 		delay(100);
 	}
 	drive(0,0);
+
 }

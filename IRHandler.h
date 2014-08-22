@@ -29,19 +29,20 @@
 
 #include "Pinout.h"
 #include "IRremote.h"
+#include "Log.h"
 
-#define WAIT_PERIOD 200
+// how often the ir recevier is checked per second
+#define IR_FREQ 5 // hz
 
 class IRHandler {
 public:
-	IRHandler() : mIRReceiver(IRRECEIVER), mInitialized(false), mNewResult(false), mLastSignal(0) {};
-	virtual ~IRHandler() {};
 
-	static void loop();
-	static IRHandler getInstance();
+	static int loop();
+	static IRHandler* getInstance();
 
 	unsigned long getResult();
 	bool hasNewResult();
+	void clearResult();
 
 	void initialize();
 
@@ -50,6 +51,8 @@ public:
 	int mLastSignal;
 
 private:
+	IRHandler();
+
 	bool receive();
 
 	IRsend mIRSender;
@@ -58,7 +61,6 @@ private:
 	bool mNewResult;
 
 	bool mInitialized;
-
 
 };
 

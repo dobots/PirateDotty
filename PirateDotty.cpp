@@ -9,6 +9,7 @@
 #include "Sensor.h"
 #include "IRHandler.h"
 #include "Gunner.h"
+#include "Looper.h"
 
 bool isRemoteControl = true;
 long lastActivity = 0;
@@ -28,8 +29,11 @@ void setup()
 	initActuators();
 	initBluetooth(&Serial2);
 	initRandomWalk();
-	IR_HANDLER.initialize();
+
+	IRHandler::getInstance()->initialize();
+
 	initIRHoming();
+	gunner_init();
 
 	ledON(STATE_LED);
 
@@ -45,10 +49,13 @@ void setup()
 // The loop function is called in an endless loop
 void loop()
 {
+	Looper::loop();
+
 //	readBatteryState();
 
-	IRHandler::loop();
-	gunner_loop();
+
+//	IRHandler::loop();
+//	gunner_loop();
 
 
 //	IRhomeWalk();

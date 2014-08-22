@@ -26,18 +26,28 @@
 
 #include "IRHandler.h"
 #include "Log.h"
+#include "Looper.h"
 
-IRHandler IR_HANDLER;
+IRHandler* IR_HANDLER_INSTANCE = NULL;
 
-IRHandler IRHandler::getInstance() {
-	return IR_HANDLER;
+IRHandler::IRHandler() :
+		mIRReceiver(IRRECEIVER), mInitialized(false), mNewResult(false), mLastSignal(0)
+{
+};
+
+IRHandler* IRHandler::getInstance() {
+	if (IR_HANDLER_INSTANCE == NULL) {
+		IR_HANDLER_INSTANCE = new IRHandler();
+	}
+
+	return IR_HANDLER_INSTANCE;
 }
 
-void IRHandler::loop() {
+int IRHandler::loop() {
 
-	if (millis() >= IR_HANDLER.mLastSignal + WAIT_PERIOD) {
-		IR_HANDLER.receive();
-	}
+	IRHandler::getInstance()->receive();
+
+	return 1000 / IR_FREQ;
 }
 
 bool IRHandler::receive() {
@@ -51,6 +61,7 @@ bool IRHandler::receive() {
 	if (mNewResult) {
 		mLastResult = irResult;
 		LOGd(1, "\t[%d] signal recvd: %d", millis(), irResult.value);
+		// resume receiver, has to be done after every successful reception
 		mIRReceiver.resume();
 		mLastSignal = millis();
 	} else {
@@ -71,7 +82,12 @@ bool IRHandler::hasNewResult() {
 	return mNewResult;
 }
 
+void IRHandler::clearResult() {
+	mNewResult = false;
+}
+
 void IRHandler::initialize() {
+	Looper::registerLoopFunc(IRHandler::loop);
 	mIRReceiver.enableIRIn(); // Start the receiver
 	mInitialized = true;
 }
@@ -83,7 +99,7 @@ void IRHandler::send(unsigned int *code, int length) {
 		delay(40);
 	}
 
-	// enable receiver again
+	// enable receiver again, has to be done after every send
 	mIRReceiver.enableIRIn();
 }
 

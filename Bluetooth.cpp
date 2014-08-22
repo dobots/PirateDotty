@@ -11,6 +11,7 @@
 #include "messenger.h"
 #include "IRHoming.h"
 #include "Gunner.h"
+#include "IRHandler.h"
 
 Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive);
 
@@ -41,7 +42,7 @@ void handleInput(int incoming) {
 		switchHoming();
 		break;
 	case 32:
-		shoot = true;
+		shootGuns();
 		break;
 	case 'c':
 		continuous = !continuous;

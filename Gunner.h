@@ -27,18 +27,25 @@
 #ifndef GUNNER_H_
 #define GUNNER_H_
 
-extern unsigned int IR_GUN_SHOT_SEND[];
 #define IR_GUN_SHOT 632192736
 
-extern bool shoot;
+// for a hit to be detected, 3 shots signals need to be detected within HIT_TIMOUT
+// shot count will be reset HIT_TIMEOUT seconds after the last detected shot
+#define HIT_TIMEOUT 1000 // ms
+
+// delay next gun shot. guns can only be shot every ... seconds (need time to reload!)
+#define SHOOT_DELAY 5000 //ms
+
+// detect shots every ... seconds
+#define GUNNER_FREQ 5 // HZ
+
 extern bool continuous;
 
-void gunner_loop();
+void gunner_init();
+
+int gunner_loop();
 
 void shootGuns();
-
-bool detectShot();
-
-void hitDetected();
+void setContinuous(bool value);
 
 #endif /* GUN_H_ */
