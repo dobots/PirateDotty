@@ -64,13 +64,6 @@ void sendLog(char* log){
     sendMessage(Log);
 }
 
-void sendBattery() {
-	aJsonObject * battery = createSensorData();
-	int batterystate = readBatteryState();
-	addSensorValue(battery, "Battery", batterystate);
-	sendMessage(battery);
-}
-
 void doDrive(int left, int right) {
 	if (GOHOME) {
 		drive(left, right);
@@ -102,7 +95,7 @@ void IRhomeWalk(){
 			lastValue = IR_HANDLER.getResult();
 			lastCheck = millis();
 
-			sendIRData();
+//			sendIRData();
 
 //			LOGd(1, "\tsignal recvd: %d", IRresults.value);
 //			irrecv_digi.resume();
@@ -304,14 +297,6 @@ void disableHoming(){
 	GOHOME = false;
 	dostop();
 }
-
-void sendIRData(){
-	aJsonObject * IRData;
-    IRData = createSensorData();
-    addSensorValue(IRData, "IR command received", (int)IR_HANDLER.getResult());
-    sendMessage(IRData);
-}
-
 
 void sendNull(){
 	aJsonObject * IRData;

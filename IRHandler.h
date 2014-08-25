@@ -27,6 +27,7 @@
 #ifndef IRHANDLER_H_
 #define IRHANDLER_H_
 
+#include "PirateDotty.h"
 #include "Pinout.h"
 #include "IRremote.h"
 #include "Log.h"
@@ -47,6 +48,10 @@ public:
 	void initialize();
 
 	void send(unsigned int* code, int length);
+
+#ifdef BT_APP
+	void sendIRData();
+#endif
 
 	int mLastSignal;
 

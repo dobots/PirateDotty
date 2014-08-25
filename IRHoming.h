@@ -31,12 +31,6 @@ void initIRHoming();
 void IRhomeWalk();
 void enableHoming();
 void disableHoming();
-void moveForward(long duration);
-void rotateCounterClockwise();
-void rotateClockwise();
-
-void sendIRData();
-void sendNull();
 
 void switchHoming();
 

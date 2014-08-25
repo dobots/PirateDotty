@@ -12,63 +12,25 @@
 #include "IRHoming.h"
 #include "Gunner.h"
 #include "IRHandler.h"
+#include "Sensor.h"
+#include "protocol.h"
+#include "Looper.h"
 
-Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive);
+#define HOMING USER+1
+#define SHOOT_GUNS USER+2
+#define FIRE_VOLLEY USER+3
 
-void initBluetooth(Stream *stream) {
-	setSerialLine(stream);
-}
-
-void handleInput(int incoming) {
-
-	switch(incoming) {
-	case 'w':
-		drive(55, 55);
-		break;
-	case 's':
-		drive(-55, -55);
-		break;
-	case 'a':
-		drive(-55, 55);
-		break;
-	case 'd':
-		drive(55, -55);
-		break;
-	case 'q':
-	case 'e':
-		drive(0, 0);
-		break;
-	case 'h':
-		switchHoming();
-		break;
-	case 32:
-		shootGuns();
-		break;
-	case 'c':
-		continuous = !continuous;
-		LOGd(1, "shoot continuous: %s", continuous ? "true" : "false");
-		break;
-	default:
-		LOGd(1, "incoming: %c (%d)", incoming, incoming);
-		break;
-	}
-}
-
-void receiveCommands() {
-
-#ifdef DEBUG
-	if (Serial2.available()) {
-		int incoming = Serial2.read();
-		handleInput(incoming);
-
-		lastActivity = millis();
-	}
-#else
-	if (messenger.handleMessages()) {
-		lastActivity = millis();
-	}
+#ifdef BT_APP
+	Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive, onCustom);
 #endif
 
+Stream* btSerialLine = NULL;
+
+void initBluetooth(Stream *stream) {
+	btSerialLine = stream;
+	setSerialLine(stream);
+
+	Looper::registerLoopFunc(receiveCommands);
 }
 
 void onControl(boolean enabled) {
@@ -81,10 +43,7 @@ void onDisconnect(aJsonObject* json) {
 
 void onSensorRequest(aJsonObject* json) {
 	LOGd(3, "onSensorRequest");
-//	sendData();
-//	sendIRData();
-	switchHoming();
-//	switchPower();
+	sendSensorData();
 }
 
 void onDrive(int left, int right) {
@@ -93,6 +52,98 @@ void onDrive(int left, int right) {
 
 	LOGd(3, "handleDriveCommand (%d, %d)", left, right);
 	drive(left, right);
+}
+
+void onCustom(aJsonObject* json) {
+	switch(getType(json)) {
+	case HOMING:
+		switchHoming();
+		break;
+	case SHOOT_GUNS:
+		shootGuns();
+		break;
+	case FIRE_VOLLEY:
+		fireVolley();
+		break;
+	}
+}
+
+int lastDrive = 0;
+#define DRIVE_TIMEOUT 1000
+
+void handleInput(int incoming) {
+
+	switch(incoming) {
+	case 'w':
+		drive(55, 55);
+		lastDrive = millis();
+		break;
+	case 's':
+		drive(-55, -55);
+		lastDrive = millis();
+		break;
+	case 'a':
+		drive(-55, 55);
+		lastDrive = millis();
+		break;
+	case 'd':
+		drive(55, -55);
+		lastDrive = millis();
+		break;
+	case 'q':
+	case 'e':
+		drive(0, 0);
+		break;
+	case 'h':
+		switchHoming();
+		break;
+	case 32:
+		shootGuns();
+		break;
+	case 'v':
+		fireVolley();
+		break;
+	case 'c':
+		continuous = !continuous;
+		LOGd(1, "shoot continuous: %s", continuous ? "true" : "false");
+		break;
+	default:
+		LOGd(1, "incoming: %c (%d)", incoming, incoming);
+		break;
+	}
+
+}
+
+int receiveCommands() {
+
+#ifdef USB_SERIAL
+	if (Serial.available()) {
+		int incoming = Serial.read();
+		handleInput(incoming);
+
+		lastActivity = millis();
+	}
+
+	if (lastDrive && (millis() > lastDrive + DRIVE_TIMEOUT)) {
+		drive(0,0);
+		lastDrive = 0;
+	}
+#endif
+#ifdef BT_SERIAL
+	if (btSerialLine->available()) {
+		int incoming = btSerialLine->read();
+		handleInput(incoming);
+
+		lastActivity = millis();
+	}
+#endif
+#ifdef BT_APP
+	if (messenger.handleMessages()) {
+		lastActivity = millis();
+	}
+#endif
+
+	return 0; // no delay, call as much as possible
 }
 
 //void handleMotorCommand(aJsonObject* json) {

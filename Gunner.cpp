@@ -32,11 +32,14 @@
 
 unsigned int IR_GUN_SHOT_SEND[] = {1000, 1000, 1000, 1000, 1000};
 
-bool shoot = false;
+//bool shoot = false;
+int shots = 0;
 bool continuous = false;
 int lastShotDetect = 0;
 int shotCount = 0;
-int nextShot = 0;
+int gunsReloaded = 0;
+int reloadTime = 0;
+bool readyToShoot = true;
 
 bool detectShot();
 void hitDetected();
@@ -49,13 +52,24 @@ int gunner_loop() {
 
 	// shoot
 	if (continuous) {
-		shoot = true;
+		shots = 1;
 	}
 
-	if (shoot && Looper::now() > nextShot) {
-		LOGd(1, "SHOOT");
+	if (!readyToShoot && Looper::now() > gunsReloaded) {
+		LOGd(1, "guns reloaded ...");
+		readyToShoot = true;
+	}
+
+	if (shots && readyToShoot) {
+		LOGd(1, "SHOOT %d", shots);
 		IRHandler::getInstance()->send(IR_GUN_SHOT_SEND, 5);
-		shoot = false;
+		--shots;
+
+		if (!shots) {
+			gunsReloaded = Looper::now() + reloadTime;
+			readyToShoot = false;
+			LOGd(1, "reloading ... (%d s)", reloadTime / 1000);
+		}
 	}
 
 	// check if shot
@@ -76,9 +90,16 @@ int gunner_loop() {
 }
 
 void shootGuns() {
-	if (shoot == false) {
-		nextShot += SHOOT_DELAY;
-		shoot = true;
+	if (readyToShoot) {
+		reloadTime = SHOOT_DELAY;
+		shots = 1;
+	}
+}
+
+void fireVolley() {
+	if (readyToShoot) {
+		reloadTime = 3 * SHOOT_DELAY;
+		shots = 3;
 	}
 }
 

@@ -34,7 +34,7 @@
 #define HIT_TIMEOUT 1000 // ms
 
 // delay next gun shot. guns can only be shot every ... seconds (need time to reload!)
-#define SHOOT_DELAY 5000 //ms
+#define SHOOT_DELAY 2000 //ms
 
 // detect shots every ... seconds
 #define GUNNER_FREQ 5 // HZ
@@ -47,5 +47,6 @@ int gunner_loop();
 
 void shootGuns();
 void setContinuous(bool value);
+void fireVolley();
 
 #endif /* GUN_H_ */

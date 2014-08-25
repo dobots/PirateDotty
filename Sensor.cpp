@@ -28,6 +28,8 @@
 
 #include "Pinout.h"
 #include "PirateDotty.h"
+#include "protocol.h"
+#include "IRHandler.h"
 
 void initSensors(){
 	pinMode(BATTERYSENSOR,INPUT);
@@ -42,4 +44,18 @@ int readBatteryState(){
 //	Serial.print("batterystate: ");
 //	Serial.println(value);
 	return value;
+}
+
+void sendBattery() {
+	aJsonObject * battery = createSensorData();
+	int batterystate = readBatteryState();
+	addSensorValue(battery, "Battery", batterystate);
+	sendMessage(battery);
+}
+
+void sendSensorData() {
+	// taking the easy way now, by just calling each individual function
+	// but better would be to gather the data here and pack it all in one
+	// message to send
+	IRHandler::getInstance()->sendIRData();
 }

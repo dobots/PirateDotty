@@ -21,13 +21,20 @@ bool dismount = false;
 //The setup function is called once at startup of the sketch
 void setup()
 {
-	Serial.begin(115200);
-	Serial1.begin(115200);
+	Serial.begin(115200); // USB
+//	Serial1.begin(115200);
 	Serial2.begin(115200);	// Bluetooth
+
+#ifdef BT_SERIAL
+	initLogging(&Serial2);
+#else
+	initLogging(&Serial);
+#endif
+
+	initBluetooth(&Serial2);
 
 	initSensors();
 	initActuators();
-	initBluetooth(&Serial2);
 	initRandomWalk();
 
 	IRHandler::getInstance()->initialize();
@@ -49,6 +56,10 @@ void setup()
 // The loop function is called in an endless loop
 void loop()
 {
+	// don't disable this, currently handles:
+	// - receiveCommands()
+	// - IRHandler::loop()
+	// - gunner_loop();
 	Looper::loop();
 
 //	readBatteryState();
@@ -110,5 +121,5 @@ void loop()
 
 //	readSensors();
 	*/
-	receiveCommands();
+//	receiveCommands();
 }

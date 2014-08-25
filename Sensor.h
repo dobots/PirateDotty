@@ -31,4 +31,6 @@ void initSensors();
 void readSensors();
 int readBatteryState();
 
+void sendSensorData();
+
 #endif /* SENSOR_H_ */

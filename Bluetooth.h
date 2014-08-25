@@ -12,12 +12,13 @@
 
 void initBluetooth(Stream *stream);
 
-void receiveCommands();
+int receiveCommands();
 
 void onControl(boolean enabled);
 void onDisconnect(aJsonObject* json);
 void onSensorRequest(aJsonObject* json);
 void onDrive(int left, int right);
+void onCustom(aJsonObject* json);
 
 //void handleMotorCommand(aJsonObject* json);
 

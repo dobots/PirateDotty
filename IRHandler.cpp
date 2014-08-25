@@ -24,6 +24,7 @@
  * @company:     Distributed Organisms B.V.
  */
 
+#include "protocol.h"
 #include "IRHandler.h"
 #include "Log.h"
 #include "Looper.h"
@@ -64,9 +65,20 @@ bool IRHandler::receive() {
 		// resume receiver, has to be done after every successful reception
 		mIRReceiver.resume();
 		mLastSignal = millis();
+
 	} else {
+		mLastResult.value = 0;
 //		LOGd(1, "\t[%d] no signal", millis());
 	}
+
+#ifdef BT_APP
+//	if (mNewResult) {
+	sendIRData();
+//	} else {
+//		sendIRData(0);
+//	}
+#endif
+
 	return mNewResult;
 }
 
@@ -102,5 +114,14 @@ void IRHandler::send(unsigned int *code, int length) {
 	// enable receiver again, has to be done after every send
 	mIRReceiver.enableIRIn();
 }
+
+#ifdef BT_APP
+void IRHandler::sendIRData() {
+	aJsonObject * IRData;
+    IRData = createSensorData();
+    addSensorValue(IRData, "IR command received", (long int)mLastResult.value);
+    sendMessage(IRData);
+}
+#endif
 
 
