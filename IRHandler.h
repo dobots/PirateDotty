@@ -49,9 +49,7 @@ public:
 
 	void send(unsigned int* code, int length);
 
-#ifdef BT_APP
 	void sendIRData();
-#endif
 
 	int mLastSignal;
 

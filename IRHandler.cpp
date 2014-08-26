@@ -115,13 +115,13 @@ void IRHandler::send(unsigned int *code, int length) {
 	mIRReceiver.enableIRIn();
 }
 
-#ifdef BT_APP
 void IRHandler::sendIRData() {
+#ifdef BT_APP
 	aJsonObject * IRData;
     IRData = createSensorData();
     addSensorValue(IRData, "IR command received", (long int)mLastResult.value);
     sendMessage(IRData);
-}
 #endif
+}
 
 

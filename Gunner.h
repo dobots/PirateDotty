@@ -49,4 +49,6 @@ void shootGuns();
 void setContinuous(bool value);
 void fireVolley();
 
+void sendHitDetected();
+
 #endif /* GUN_H_ */

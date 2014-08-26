@@ -16,10 +16,6 @@
 #include "protocol.h"
 #include "Looper.h"
 
-#define HOMING USER+1
-#define SHOOT_GUNS USER+2
-#define FIRE_VOLLEY USER+3
-
 #ifdef BT_APP
 	Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive, onCustom);
 #endif

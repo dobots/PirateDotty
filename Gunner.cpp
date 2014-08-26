@@ -29,6 +29,8 @@
 #include "Log.h"
 #include "Actuator.h"
 #include "Looper.h"
+#include "protocol.h"
+#include "Bluetooth.h"
 
 unsigned int IR_GUN_SHOT_SEND[] = {1000, 1000, 1000, 1000, 1000};
 
@@ -69,6 +71,9 @@ int gunner_loop() {
 			gunsReloaded = Looper::now() + reloadTime;
 			readyToShoot = false;
 			LOGd(1, "reloading ... (%d s)", reloadTime / 1000);
+		} else {
+			gunsReloaded = Looper::now() + 500;
+			readyToShoot = false;
 		}
 	}
 
@@ -132,6 +137,8 @@ void hitDetected() {
 
 	LOGd(1, "yarrrgh!! we was hit");
 
+	sendHitDetected();
+
 	for (int i = 0; i < 5; ++i) {
 		drive(-100, 100);
 		delay(100);
@@ -140,4 +147,12 @@ void hitDetected() {
 	}
 	drive(0,0);
 
+}
+
+void sendHitDetected() {
+#ifdef BT_APP
+	LOGd(1, "sendHItDetected()");
+	aJsonObject* json = createJsonBase(HIT_DETECTED);
+    sendMessage(json);
+#endif
 }

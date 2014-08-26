@@ -10,6 +10,11 @@
 
 #include "aJSON.h"
 
+#define HOMING USER+1
+#define SHOOT_GUNS USER+2
+#define FIRE_VOLLEY USER+3
+#define HIT_DETECTED USER+4
+
 void initBluetooth(Stream *stream);
 
 int receiveCommands();
