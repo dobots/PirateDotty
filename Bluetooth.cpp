@@ -22,6 +22,9 @@
 
 Stream* btSerialLine = NULL;
 
+int lastDrive = 0;
+#define DRIVE_TIMEOUT 1000
+
 void initBluetooth(Stream *stream) {
 	btSerialLine = stream;
 	setSerialLine(stream);
@@ -48,6 +51,10 @@ void onDrive(int left, int right) {
 
 	LOGd(3, "handleDriveCommand (%d, %d)", left, right);
 	drive(left, right);
+
+	if (left != 0 && right != 0) {
+		lastDrive = millis();
+	}
 }
 
 void onCustom(aJsonObject* json) {
@@ -64,31 +71,24 @@ void onCustom(aJsonObject* json) {
 	}
 }
 
-int lastDrive = 0;
-#define DRIVE_TIMEOUT 1000
-
 void handleInput(int incoming) {
 
 	switch(incoming) {
 	case 'w':
-		drive(55, 55);
-		lastDrive = millis();
+		onDrive(55, 55);
 		break;
 	case 's':
-		drive(-55, -55);
-		lastDrive = millis();
+		onDrive(-55, -55);
 		break;
 	case 'a':
-		drive(-55, 55);
-		lastDrive = millis();
+		onDrive(-55, 55);
 		break;
 	case 'd':
-		drive(55, -55);
-		lastDrive = millis();
+		onDrive(55, -55);
 		break;
 	case 'q':
 	case 'e':
-		drive(0, 0);
+		onDrive(0, 0);
 		break;
 	case 'h':
 		switchHoming();
@@ -119,11 +119,6 @@ int receiveCommands() {
 
 		lastActivity = millis();
 	}
-
-	if (lastDrive && (millis() > lastDrive + DRIVE_TIMEOUT)) {
-		drive(0,0);
-		lastDrive = 0;
-	}
 #endif
 #ifdef BT_SERIAL
 	if (btSerialLine->available()) {
@@ -138,6 +133,19 @@ int receiveCommands() {
 		lastActivity = millis();
 	}
 #endif
+
+	// check for driving command timeouts. It's not really the correct place
+	// to handle this in the bluetooth loop, but it's the easiest to do here,
+	// otherwise a new loop has to be added in the Actuator.cpp handling the
+	// drive timeout.
+	// if no drive command is received within the DRIVE_TIMEOUT then stop
+	// driving.
+	// lastDrive is the time when the last drive command (not stop command)
+	// was received
+	if (lastDrive && (millis() > lastDrive + DRIVE_TIMEOUT)) {
+		drive(0,0);
+		lastDrive = 0;
+	}
 
 	return 0; // no delay, call as much as possible
 }

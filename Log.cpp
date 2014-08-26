@@ -23,8 +23,8 @@ char buf[KPRINTF_BUF_SIZE];
 	bool debug_on = false;
 #endif
 
-//int log_level = 3;
-int log_level = 1;
+int log_level = 3;
+//int log_level = 1;
 
 // --------------------------------------------------------------------
 // FUNCTIONS
