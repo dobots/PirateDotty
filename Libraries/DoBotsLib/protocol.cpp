@@ -3,6 +3,10 @@
 Stream *serial_stream;
 aJsonStream *jsonStream;
 
+//#ifdef USB_SERIAL
+//	aJsonStream *debugStream;
+//#endif
+
 #ifdef HEADER_BIG
 int mTransactionId = 0;
 #endif
@@ -11,6 +15,9 @@ int mTransactionId = 0;
 void setSerialLine(Stream *stream) {
 	serial_stream = stream;
 	jsonStream = new aJsonStream(stream);
+//#ifdef USB_SERIAL
+//	debugStream = new aJsonStream(&Serial);
+//#endif
 }
 
 // get the message type. see header for the available types
@@ -98,6 +105,13 @@ void addSensorValue(aJsonObject *json, char* name, boolean value) {
 	} else {
 		aJson.addFalseToObject(data, name);
 	}
+}
+
+// add an long integer value to the sensor data message
+void addSensorValue(aJsonObject *json, char* name, long value) {
+	aJsonObject* data = aJson.getObjectItem(json, "data");
+
+	aJson.addNumberToObject(data, name, value);
 }
 
 // create a drive command message with left and right speed setpoints

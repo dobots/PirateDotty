@@ -1,11 +1,12 @@
 #include "messenger.h"
 
 Messenger::Messenger(handleControl_func onControl_cb, handleCommand_func onDisconnect_cb,
-		  handleCommand_func onSensorRequest_cb, handleDrive_func onDrive_cb) :
+		  handleCommand_func onSensorRequest_cb, handleDrive_func onDrive_cb, handleCustom_func onCustom_cb) :
 	onControl(onControl_cb),
 	onDisconnect(onDisconnect_cb),
 	onSensorRequest(onSensorRequest_cb),
-	onDrive(onDrive_cb) {
+	onDrive(onDrive_cb),
+	onCustom(onCustom_cb) {
 }
 
 boolean Messenger::handleMessages() {
@@ -42,6 +43,9 @@ boolean Messenger::handleMessages() {
 			}
 			break;
 		default:
+			if (onCustom != NULL) {
+				onCustom(item);
+			}
 			break;
 	}
 	aJson.deleteItem(item);

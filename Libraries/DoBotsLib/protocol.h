@@ -17,6 +17,8 @@
 #define SENSOR_REQUEST  3
 #define SENSOR_DATA 	4
 
+#define USER			20
+
 // PUBLIC FUNCTIONS
 
 void setSerialLine(Stream *stream);
@@ -30,6 +32,7 @@ void addSensorValue(aJsonObject *json, char* name, int value);
 void addSensorValue(aJsonObject *json, char* name, double value);
 void addSensorValue(aJsonObject *json, char* name, char* value);
 void addSensorValue(aJsonObject *json, char* name, boolean value);
+void addSensorValue(aJsonObject *json, char* name, long value);
 
 aJsonObject* createDriveCommand(int left, int right);
 void decodeDriveCommand(aJsonObject *json, int* left, int* right);
