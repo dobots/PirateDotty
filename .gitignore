@@ -13,3 +13,6 @@
 *.a
 
 /Release
+.cproject
+.project
+/.settings
