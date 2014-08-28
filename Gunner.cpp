@@ -35,16 +35,22 @@
 unsigned int IR_GUN_SHOT_SEND[] = {1000, 1000, 1000, 1000, 1000};
 
 //bool shoot = false;
-int shots = 0;
-bool continuous = false;
+
+//int shots = 0;
+bool continuous = false; // not used, but too lazy to remove in all code
 int lastShotDetect = 0;
 int shotCount = 0;
-int gunsReloaded = 0;
-int reloadTime = 0;
-bool readyToShoot = true;
+//int gunsReloaded = 0;
+//int reloadTime = 0;
+//bool readyToShoot = true;
+bool raging = false;
+bool shotTime = 0;
+int speedLeft = 0;
+int speedRight = 0;
 
 bool detectShot();
 void hitDetected();
+int fixSpeed(int speed);
 
 void gunner_init() {
 	Looper::registerLoopFunc(gunner_loop);
@@ -52,6 +58,7 @@ void gunner_init() {
 
 int gunner_loop() {
 
+/*
 	// shoot
 	if (continuous) {
 		shots = 1;
@@ -76,6 +83,20 @@ int gunner_loop() {
 			readyToShoot = false;
 		}
 	}
+*/
+
+	if (raging) {
+		IRHandler::getInstance()->send(IR_GUN_SHOT_SEND, 5);
+
+		speedLeft = fixSpeed(speedLeft + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
+		speedRight = fixSpeed(speedRight + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
+		drive(speedLeft, speedRight);
+		delay(100);
+
+		if (shotTime + RAGE_DURATION < Looper::now()) {
+			raging = false;
+		}
+	}
 
 	// check if shot
 	if (detectShot()) {
@@ -94,23 +115,51 @@ int gunner_loop() {
 	return 1000 / GUNNER_FREQ;
 }
 
-void shootGuns() {
-	if (readyToShoot) {
-		reloadTime = SHOOT_DELAY;
-		shots = 1;
+// given speed goes from -(MAX_SPEED-MIN_SPEED) to (MAX_SPEED-MIN_SPEED)
+// outputs it in the range -MAX_SPEED to -MIN_SPEED or MIN_SPEED to MAX_SPEED
+int fixSpeed(int speed) {
+	if (speed > MAX_SPEED_RANGE) {
+		speed = MAX_SPEED_RANGE;
 	}
+	if (speed < MIN_SPEED_RANGE) {
+		speed = MIN_SPEED_RANGE;
+	}
+
+	if (speed > 0) {
+		speed += MIN_SPEED;
+	}
+	else {
+		speed -= MIN_SPEED;
+	}
+}
+
+void rage() {
+	LOGd(1, "rrrRRRRAAAAAAGGGEEE!!!!");
+	raging = true;
+	shotTime = Looper::now();
+
+	// Init speeds with a random value
+	speedLeft = fixSpeed(rand() % (2*MAX_SPEED_RANGE) - MAX_SPEED_RANGE);
+	speedRight = fixSpeed(rand() % (2*MAX_SPEED_RANGE) - MAX_SPEED_RANGE);
+
+
+	// Enable leds
+}
+
+void unrage() {
+	raging = false;
+	// Disable leds
+}
+
+
+void shootGuns() {
+
 }
 
 void fireVolley() {
-	if (readyToShoot) {
-		reloadTime = 3 * SHOOT_DELAY;
-		shots = 3;
-	}
+
 }
 
-void setContinuous(bool value) {
-	continuous = value;
-}
 
 bool detectShot() {
 
@@ -134,11 +183,10 @@ bool detectShot() {
 }
 
 void hitDetected() {
-
-	LOGd(1, "yarrrgh!! we was hit");
-
+	rage();
 	sendHitDetected();
 
+/*
 	for (int i = 0; i < 5; ++i) {
 		drive(-100, 100);
 		delay(100);
@@ -146,7 +194,7 @@ void hitDetected() {
 		delay(100);
 	}
 	drive(0,0);
-
+*/
 }
 
 void sendHitDetected() {

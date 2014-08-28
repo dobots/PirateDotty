@@ -34,7 +34,13 @@
 #define HIT_TIMEOUT 1000 // ms
 
 // delay next gun shot. guns can only be shot every ... seconds (need time to reload!)
-#define SHOOT_DELAY 2000 //ms
+//#define SHOOT_DELAY 2000 //ms
+#define RAGE_DURATION 10000 // ms
+#define MIN_SPEED 100
+#define MAX_SPEED 255
+#define MIN_SPEED_RANGE -MAX_SPEED+MIN_SPEED
+#define MAX_SPEED_RANGE MAX_SPEED-MIN_SPEED
+#define MAX_SPEED_CHANGE 10
 
 // detect shots every ... seconds
 #define GUNNER_FREQ 5 // HZ
