@@ -27,6 +27,8 @@
 #ifndef GUNNER_H_
 #define GUNNER_H_
 
+#include "Pinout.h"
+
 #define IR_GUN_SHOT 632192736
 
 // for a hit to be detected, 3 shots signals need to be detected within HIT_TIMOUT
@@ -36,14 +38,16 @@
 // delay next gun shot. guns can only be shot every ... seconds (need time to reload!)
 //#define SHOOT_DELAY 2000 //ms
 #define RAGE_DURATION 10000 // ms
-#define MIN_SPEED 100
-#define MAX_SPEED 255
-#define MIN_SPEED_RANGE -MAX_SPEED+MIN_SPEED
-#define MAX_SPEED_RANGE MAX_SPEED-MIN_SPEED
-#define MAX_SPEED_CHANGE 10
+#define MIN_SPEED (CAPSPEED/2)
+#define MAX_SPEED CAPSPEED
+#define MIN_SPEED_RANGE (-MAX_SPEED+MIN_SPEED)
+#define MAX_SPEED_RANGE (MAX_SPEED-MIN_SPEED)
+#define MAX_SPEED_CHANGE (CAPSPEED/5)
 
 // detect shots every ... seconds
 #define GUNNER_FREQ 5 // HZ
+
+//#define GUNNER_DRIVE_DELAY (1000 / (2*GUNNER_FREQ)) // ms
 
 extern bool continuous;
 

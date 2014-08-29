@@ -44,20 +44,24 @@ int shotCount = 0;
 //int reloadTime = 0;
 //bool readyToShoot = true;
 bool raging = false;
-bool shotTime = 0;
+int shotTime = 0;
 int speedLeft = 0;
 int speedRight = 0;
 
 bool detectShot();
 void hitDetected();
-int fixSpeed(int speed);
+int capRageSpeed(int speed);
+int offsetSpeed(int speed);
+void unrage();
 
 void gunner_init() {
 	Looper::registerLoopFunc(gunner_loop);
 }
 
 int gunner_loop() {
-
+//	LOGd(1, "min=%i max=%i range=%i - %i", MIN_SPEED, MAX_SPEED, MIN_SPEED_RANGE, MAX_SPEED_RANGE);
+//	LOGd(1, "2 * max range: %i", 2*MAX_SPEED_RANGE);
+//	LOGd(1, "rand: %i", rand() % (2*MAX_SPEED_RANGE));
 /*
 	// shoot
 	if (continuous) {
@@ -88,13 +92,14 @@ int gunner_loop() {
 	if (raging) {
 		IRHandler::getInstance()->send(IR_GUN_SHOT_SEND, 5);
 
-		speedLeft = fixSpeed(speedLeft + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
-		speedRight = fixSpeed(speedRight + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
-		drive(speedLeft, speedRight);
-		delay(100);
+		speedLeft = capRageSpeed(speedLeft + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
+		speedRight = capRageSpeed(speedRight + rand() % (2*MAX_SPEED_CHANGE) - MAX_SPEED_CHANGE);
+		drive(offsetSpeed(speedLeft), offsetSpeed(speedRight));
+//		delay(GUNNER_DRIVE_DELAY);
 
+//		LOGd(1, "now=%i", Looper::now());
 		if (shotTime + RAGE_DURATION < Looper::now()) {
-			raging = false;
+			unrage();
 		}
 	}
 
@@ -115,39 +120,52 @@ int gunner_loop() {
 	return 1000 / GUNNER_FREQ;
 }
 
-// given speed goes from -(MAX_SPEED-MIN_SPEED) to (MAX_SPEED-MIN_SPEED)
-// outputs it in the range -MAX_SPEED to -MIN_SPEED or MIN_SPEED to MAX_SPEED
-int fixSpeed(int speed) {
-	if (speed > MAX_SPEED_RANGE) {
-		speed = MAX_SPEED_RANGE;
+int capRageSpeed(int speed) {
+	int cappedSpeed = speed;
+	if (cappedSpeed > MAX_SPEED_RANGE) {
+		cappedSpeed = MAX_SPEED_RANGE;
 	}
-	if (speed < MIN_SPEED_RANGE) {
-		speed = MIN_SPEED_RANGE;
+	if (cappedSpeed < MIN_SPEED_RANGE) {
+		cappedSpeed = MIN_SPEED_RANGE;
 	}
+	return cappedSpeed;
+}
 
-	if (speed > 0) {
-		speed += MIN_SPEED;
+// given speed goes from MIN_SPEED_RANGE to MAX_SPEED_RANGE
+// outputs it in the range -MAX_SPEED to -MIN_SPEED or MIN_SPEED to MAX_SPEED
+int offsetSpeed(int speed) {
+//	LOGd(1, "offsetSpeed: %i", speed);
+	int offsetSpeed = speed;
+
+
+	if (offsetSpeed > 0) {
+		offsetSpeed += MIN_SPEED;
 	}
 	else {
-		speed -= MIN_SPEED;
+		offsetSpeed -= MIN_SPEED;
 	}
+	return offsetSpeed;
 }
 
 void rage() {
 	LOGd(1, "rrrRRRRAAAAAAGGGEEE!!!!");
 	raging = true;
 	shotTime = Looper::now();
+//	LOGd(1, "shotTime=%i", shotTime);
 
 	// Init speeds with a random value
-	speedLeft = fixSpeed(rand() % (2*MAX_SPEED_RANGE) - MAX_SPEED_RANGE);
-	speedRight = fixSpeed(rand() % (2*MAX_SPEED_RANGE) - MAX_SPEED_RANGE);
-
-
-	// Enable leds
+	speedLeft = capRageSpeed(rand() % (2*(MAX_SPEED_RANGE)) - MAX_SPEED_RANGE);
+	speedRight = capRageSpeed(rand() % (2*(MAX_SPEED_RANGE)) - MAX_SPEED_RANGE);
+//	LOGd(1, "speeds: %i %i", speedLeft, speedRight);
+	// TODO: Enable leds
+	drive(offsetSpeed(speedLeft), offsetSpeed(speedRight));
+//	delay(GUNNER_DRIVE_DELAY);
 }
 
 void unrage() {
+	LOGd(1, "I'm ok again");
 	raging = false;
+	drive(0,0);
 	// Disable leds
 }
 
@@ -183,8 +201,8 @@ bool detectShot() {
 }
 
 void hitDetected() {
-	rage();
 	sendHitDetected();
+	rage();
 
 /*
 	for (int i = 0; i < 5; ++i) {
