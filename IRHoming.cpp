@@ -33,17 +33,19 @@
 #include "PirateDotty.h"
 #include "Sensor.h"
 #include "IRHandler.h"
+#include "Looper.h"
 
 bool GOHOME;
 bool CHARGING;
 unsigned long correctValue = 543819690;
 unsigned long lastValue;
+unsigned long currValue;
 
 //int ROTATE_HOMING_SPEED = 20;
 //int DEFAULT_HOMING_SPEED = 120;
-int ROTATE_HOMING_SPEED = 50;
+int ROTATE_HOMING_SPEED = 40;
 //int DEFAULT_HOMING_SPEED = 90;	//this speed works on samsGalaxy & nexus7....NOT xperia's
-int DEFAULT_HOMING_SPEED = 70;
+int DEFAULT_HOMING_SPEED = 40;
 
 int lastDirection = 1;		// toggles between 1 and -1 for direction left & right
 int lastCheck = millis();
@@ -56,6 +58,8 @@ int searchTimeout = 20000;
 void initIRHoming(){
 	GOHOME = false;
 	CHARGING = false;
+
+	Looper::registerLoopFunc(IRhomeWalk);
 }
 
 void sendLog(char* log){
@@ -70,8 +74,13 @@ void doDrive(int left, int right) {
 	}
 }
 
+int lastHoming = 0;
 int errorCount = 0;
-void IRhomeWalk(){
+int IRhomeWalk(){
+	if (!GOHOME) {
+		lastHoming = 1;
+		return waitPeriod;
+	}
 
 	// TODO: identify under which decoder the values are found!
 	// preferably apply that decoder directly for more speed?
@@ -91,8 +100,8 @@ void IRhomeWalk(){
 
 	if(millis() >= lastCheck + waitPeriod){
 
-		if (IR_HANDLER.hasNewResult()) {
-			lastValue = IR_HANDLER.getResult();
+		if (IRHandler::getInstance()->hasNewResult()) {
+			currValue = IRHandler::getInstance()->getResult();
 			lastCheck = millis();
 
 //			sendIRData();
@@ -108,17 +117,26 @@ void IRhomeWalk(){
 		}
 
 		if(GOHOME){
-			if(IR_HANDLER.hasNewResult()){
-				if(lastValue==correctValue){
-					LOGd(1, "  homing fwd");
-//					errorCount = 0;
+			if(IRHandler::getInstance()->hasNewResult()){
+				if(currValue==correctValue){
+					LOGd(2, "  homing fwd");
+					errorCount = 0;
 
 					lastControl = millis();
 					doDrive(DEFAULT_HOMING_SPEED,DEFAULT_HOMING_SPEED);
+					lastHoming = 0;
 //					lastValue = IRresults.value;
 //					lastDirection = 1;
 //					sendLog("3");
 				} else {
+					if ((lastValue == correctValue && errorCount < 4) || lastHoming == 4) {
+
+						LOGd(2, "  homing fwd try");
+						lastControl = millis();
+						doDrive(DEFAULT_HOMING_SPEED,DEFAULT_HOMING_SPEED);
+						lastHoming = 5;
+						++errorCount;
+					} else {
 //					if (lastValue == correctValue && errorCount == 0) {
 //						LOGd(1, "  homing change rotation");
 //
@@ -128,37 +146,44 @@ void IRhomeWalk(){
 //						drive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
 //	//					sendLog("5");
 //					} else {
-						LOGd(1, "  homing rotate");
+						LOGd(2, "  homing rotate");
 
 						lastControl = millis();
 						doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+						lastHoming = 1;
 //						lastValue = IRresults.value;
-//					}
+					}
 //					++errorCount;
 //					sendLog("4");
 				}
 			} else if (millis() >= lastControl + recvTimeout) {
-				if (lastValue == correctValue && errorCount < 4) {
-					LOGd(1, "  homing change rotation");
+				if (lastHoming == 1 && errorCount < 4) {
+//					if (lastValue == correctValue && errorCount < 4) {
+					LOGd(2, "  homing change rotation");
 
 					lastControl = millis();
 					lastDirection *= -1;
 					++errorCount;
 					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+					lastHoming = 2;
 //					sendLog("5");
-				} else if (lastValue == correctValue) {
-					LOGd(1, "  homing bwd");
+				} else if (lastHoming == 0 || lastHoming == 5) {
+//					LOGd(2, "  homing bwd");
+					LOGd(2, "  homing rot");
 
 					lastControl = millis() + recvTimeout / 2;
 					lastValue = -1;
 					errorCount = 0;
-					doDrive(-1*DEFAULT_HOMING_SPEED, -1*DEFAULT_HOMING_SPEED);
+//					doDrive(-1*DEFAULT_HOMING_SPEED, -1*DEFAULT_HOMING_SPEED);
+					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+					lastHoming = 3;
 //					sendLog("6");
 				} else {
-					LOGd(1, "  homing search");
+					LOGd(2, "  homing search");
 
 					lastControl = millis();
 					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+					lastHoming = 4;
 //					sendLog("7");
 
 				}
@@ -172,6 +197,8 @@ void IRhomeWalk(){
 //			} else if (millis() >= lastSignal + searchTimeout) {
 //				dostop();
 //			}
+
+			lastValue = currValue;
 		}
 
 	}

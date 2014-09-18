@@ -31,7 +31,7 @@
 
 #define STATE_LED 13
 
-#define CAPSPEED 100 // this cap should be low enough for all phones (give ppl option to up it for better phones)
+#define CAPSPEED 150 // this cap should be low enough for all phones (give ppl option to up it for better phones)
 //#define CAPSPEED 50
 
 #endif /* PINOUT_H_ */

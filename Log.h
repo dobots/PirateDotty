@@ -9,4 +9,6 @@ void setLogLevel(int level);
 void LOGi(const int loglevel, const char* fmt, ... );
 void LOGd(const int loglevel, const char* fmt, ... );
 
+extern int log_level;
+
 #endif

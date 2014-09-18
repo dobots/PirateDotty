@@ -93,6 +93,10 @@ void handleInput(int incoming) {
 	case 'h':
 		switchHoming();
 		break;
+	case 'l':
+		++log_level %= 4;
+		LOGi(1, "log level: %d", log_level);
+		break;
 	case 32:
 		shootGuns();
 		break;

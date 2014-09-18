@@ -28,7 +28,7 @@
 #define IRHOMING_H_
 
 void initIRHoming();
-void IRhomeWalk();
+int IRhomeWalk();
 void enableHoming();
 void disableHoming();
 
