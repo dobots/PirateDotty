@@ -19,7 +19,11 @@
 #define IRRECEIVER 3 // Infrared Receiver
 #define IRLEDRIGHT 6 // Not locked down, can change the pin #
 
-#define BATTERYSENSOR 16 // A2
+#define BATTERY_SENSOR 16 // A2
+
+#define DISTANCE_SENSOR A0
+#define LIGHT_SENSOR A1
+
 //#define IRLEDLEFT ..
 
 #define ID_SWITCH 7

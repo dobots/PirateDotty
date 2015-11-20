@@ -32,17 +32,23 @@
 #include "IRHandler.h"
 
 void initSensors(){
-	pinMode(BATTERYSENSOR,INPUT);
+	pinMode(BATTERY_SENSOR,INPUT);
+	pinMode(DISTANCE_SENSOR, INPUT);
 }
 
 void readSensors(){
 	readBatteryState();
 }
 
+int getDistance() {
+	int value = analogRead(DISTANCE_SENSOR);
+//	LOGd(3, "distance: %4d", value);
+	return value;
+}
+
 int readBatteryState(){
-	int value = analogRead(BATTERYSENSOR);
-//	Serial.print("batterystate: ");
-//	Serial.println(value);
+	int value = analogRead(BATTERY_SENSOR);
+//	LOGd(3, "batteryState: %4d", value);
 	return value;
 }
 

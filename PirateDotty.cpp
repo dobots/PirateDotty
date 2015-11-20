@@ -10,6 +10,8 @@
 #include "IRHandler.h"
 #include "Gunner.h"
 #include "Looper.h"
+#include "ObstacleDetection.h"
+#include "DriveControl.h"
 
 bool isRemoteControl = true;
 long lastActivity = 0;
@@ -40,7 +42,6 @@ void setup()
 	IRHandler::getInstance()->initialize();
 
 	initIRHoming();
-	gunner_init();
 
 	ledON(STATE_LED);
 
@@ -50,7 +51,57 @@ void setup()
 //		pinMode(UNUSED[i],OUTPUT);
 //	}
 
+	init();
+
 	LOGi(0, "\n\n\n\n\ninitialisation done ...");
+}
+
+bool close = false;
+bool far = false;
+bool midrange = false;
+
+int checkDistance() {
+
+	LOGi(0, "distance: %4d", getDistance());
+
+	if (obstacleDetected()) {
+		if (isClose() && !close) {
+			close = true;
+			far = false;
+			midrange = false;
+			LOGd(0, "CLOSE!!!");
+		} else if (isFar() && !far) {
+			far = true;
+			close = false;
+			midrange = false;
+			LOGd(0, "FAR AWAY");
+		} else if (isMidrange() && !midrange) {
+			far = false;
+			close = false;
+			midrange = true;
+			LOGd(0, "GOING MIDRANGE");
+		}
+	} else if (close || far || midrange) {
+		close = far = midrange = false;
+		LOGd(0, "GONE");
+	}
+
+	return 500;
+}
+
+void init() {
+	// read bluetooth
+	Looper::registerLoopFunc(receiveCommands);
+	// handle drive commands
+	Looper::registerLoopFunc(driveControl);
+
+	Looper::registerLoopFunc(readLight);
+	Looper::registerLoopFunc(checkDistance);
+
+//	// gunner
+//	Looper::registerLoopFunc(gunner_loop);
+//	// ir handler
+//	Looper::registerLoopFunc(IRHandler::loop);
 }
 
 // The loop function is called in an endless loop

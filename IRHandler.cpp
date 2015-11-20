@@ -99,7 +99,6 @@ void IRHandler::clearResult() {
 }
 
 void IRHandler::initialize() {
-	Looper::registerLoopFunc(IRHandler::loop);
 	mIRReceiver.enableIRIn(); // Start the receiver
 	mInitialized = true;
 }

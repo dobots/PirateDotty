@@ -2,7 +2,7 @@
  * 456789------------------------------------------------------------------------------------------------------------120
  *
  * @brief:
- * @file: Gun.h
+ * @file: ObstacleDetection.cpp
  *
  * @desc: 
  *
@@ -19,34 +19,43 @@
  * Copyright (c) 2013 Dominik Egger <dominik@dobots.nl>
  *
  * @author:        Dominik Egger
- * @date:        Aug 21, 2014
+ * @date:        Nov 20, 2015
  * @project:    PirateDotty
  * @company:     Distributed Organisms B.V.
  */
 
-#ifndef GUNNER_H_
-#define GUNNER_H_
+//-------------------------------------------------------------------
+// INCLUDES
+//-------------------------------------------------------------------
+#include "ObstacleDetection.h"
+#include "Sensor.h"
 
-#define IR_GUN_SHOT 632192736
+//-------------------------------------------------------------------
+// CONFIG
+//-------------------------------------------------------------------
 
-// for a hit to be detected, 3 shots signals need to be detected within HIT_TIMOUT
-// shot count will be reset HIT_TIMEOUT seconds after the last detected shot
-#define HIT_TIMEOUT 1000 // ms
+//-------------------------------------------------------------------
+// FUNCTIONS
+//-------------------------------------------------------------------
 
-// delay next gun shot. guns can only be shot every ... seconds (need time to reload!)
-#define SHOOT_DELAY 2000 //ms
+// PUBLIC
 
-// detect shots every ... seconds
-#define GUNNER_FREQ 5 // HZ
+bool isClose() {
+	return getDistance() > CLOSE_THRESHOLD;
+}
 
-extern bool continuous;
+bool isMidrange() {
+	int distance = getDistance();
+	return distance < CLOSE_THRESHOLD && distance > FAR_THRESHOLD;
+}
 
-int gunner_loop();
+bool isFar() {
+	return getDistance() < FAR_THRESHOLD;
+}
 
-void shootGuns();
-void setContinuous(bool value);
-void fireVolley();
+bool obstacleDetected() {
+	return getDistance() > OBSTACLE_DETECTION_THRESHOLD;
+}
 
-void sendHitDetected();
+// PRIVATE
 
-#endif /* GUN_H_ */

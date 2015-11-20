@@ -7,7 +7,8 @@
 
 #include "PirateDotty.h"
 #include "RandomWalk.h"
-#include "Actuator.h"
+#include "DriveControl.h"
+//#include "Actuator.h"
 
 unsigned long lastMove;
 
@@ -66,42 +67,42 @@ void randomWalk() {
 
 void moveForward(long duration) {
 	LOGd(1, "moveForward, %d s", duration);
-	drive(DEFAULT_SPEED, DEFAULT_SPEED);
+	setDriveSpeeds(DEFAULT_SPEED, DEFAULT_SPEED);
 }
 
 void moveLeftForward(long duration) {
 	LOGd(1, "moveLeftForward, %d s", duration);
-	drive(DEFAULT_SPEED - RADIUS_OFFSET, DEFAULT_SPEED);
+	setDriveSpeeds(DEFAULT_SPEED - RADIUS_OFFSET, DEFAULT_SPEED);
 }
 
 void moveRightForward(long duration) {
 	LOGd(1, "moveRightForward, %d s", duration);
-	drive(DEFAULT_SPEED, DEFAULT_SPEED - RADIUS_OFFSET);
+	setDriveSpeeds(DEFAULT_SPEED, DEFAULT_SPEED - RADIUS_OFFSET);
 }
 
 
 void moveBackward(long duration) {
 	LOGd(1, "moveBackward, %d s", duration);
-	drive(-DEFAULT_SPEED, -DEFAULT_SPEED);
+	setDriveSpeeds(-DEFAULT_SPEED, -DEFAULT_SPEED);
 }
 
 void moveLeftBackward(long duration) {
 	LOGd(1, "moveLeftBackward, %d s", duration);
-	drive(-(DEFAULT_SPEED - RADIUS_OFFSET), -DEFAULT_SPEED);
+	setDriveSpeeds(-(DEFAULT_SPEED - RADIUS_OFFSET), -DEFAULT_SPEED);
 }
 
 void moveRightBackward(long duration) {
 	LOGd(1, "moveRightBackward, %d s", duration);
-	drive(-DEFAULT_SPEED, -(DEFAULT_SPEED - RADIUS_OFFSET));
+	setDriveSpeeds(-DEFAULT_SPEED, -(DEFAULT_SPEED - RADIUS_OFFSET));
 }
 
 
 void rotateClockwise(long duration) {
 	LOGd(1, "rotateClockwise, %d s", duration);
-	drive(DEFAULT_SPEED, -DEFAULT_SPEED);
+	setDriveSpeeds(DEFAULT_SPEED, -DEFAULT_SPEED);
 }
 
 void rotateCounterClockwise(long duration) {
 	LOGd(1, "rotateCounterClockwise, %d s", duration);
-	drive(-DEFAULT_SPEED, DEFAULT_SPEED);
+	setDriveSpeeds(-DEFAULT_SPEED, DEFAULT_SPEED);
 }

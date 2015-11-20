@@ -20,6 +20,7 @@ extern "C" {
 #endif
 void loop();
 void setup();
+void init();
 #ifdef __cplusplus
 } // extern "C"
 #endif
@@ -31,6 +32,7 @@ void setup();
 
 extern bool isRemoteControl;
 extern long lastActivity;
+
 
 //Do not add code below this line
 #endif /* PirateDotty_H_ */

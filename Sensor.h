@@ -29,7 +29,9 @@
 
 void initSensors();
 void readSensors();
+
 int readBatteryState();
+int getDistance();
 
 void sendSensorData();
 

@@ -46,10 +46,6 @@ bool readyToShoot = true;
 bool detectShot();
 void hitDetected();
 
-void gunner_init() {
-	Looper::registerLoopFunc(gunner_loop);
-}
-
 int gunner_loop() {
 
 	// shoot

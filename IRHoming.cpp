@@ -34,6 +34,7 @@
 #include "Sensor.h"
 #include "IRHandler.h"
 #include "Looper.h"
+#include "DriveControl.h"
 
 bool GOHOME;
 bool CHARGING;
@@ -59,7 +60,7 @@ void initIRHoming(){
 	GOHOME = false;
 	CHARGING = false;
 
-	Looper::registerLoopFunc(IRhomeWalk);
+//	Looper::registerLoopFunc(IRhomeWalk);
 }
 
 void sendLog(char* log){
@@ -70,7 +71,7 @@ void sendLog(char* log){
 
 void doDrive(int left, int right) {
 	if (GOHOME) {
-		drive(left, right);
+		setDriveSpeeds(left, right);
 	}
 }
 

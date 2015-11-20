@@ -15,6 +15,7 @@
 #include "Sensor.h"
 #include "protocol.h"
 #include "Looper.h"
+#include "DriveControl.h"
 
 #ifdef BT_APP
 	Messenger messenger(onControl, onDisconnect, onSensorRequest, onDrive, onCustom);
@@ -28,8 +29,6 @@ int lastDrive = 0;
 void initBluetooth(Stream *stream) {
 	btSerialLine = stream;
 	setSerialLine(stream);
-
-	Looper::registerLoopFunc(receiveCommands);
 }
 
 void onControl(boolean enabled) {
@@ -50,7 +49,8 @@ void onDrive(int left, int right) {
 	left = capSpeed(left);
 
 	LOGd(3, "handleDriveCommand (%d, %d)", left, right);
-	drive(left, right);
+//	drive(left, right);
+	setDriveSpeeds(left, right);
 
 	if (left != 0 && right != 0) {
 		lastDrive = millis();
@@ -74,6 +74,10 @@ void onCustom(aJsonObject* json) {
 void handleInput(int incoming) {
 
 	switch(incoming) {
+	case 'r':
+		LOGi(1, "rebooting ...");
+		_reboot_Teensyduino_();
+		break;
 	case 'w':
 		onDrive(55, 55);
 		break;
@@ -147,7 +151,7 @@ int receiveCommands() {
 	// lastDrive is the time when the last drive command (not stop command)
 	// was received
 	if (lastDrive && (millis() > lastDrive + DRIVE_TIMEOUT)) {
-		drive(0,0);
+		setDriveSpeeds(0,0);
 		lastDrive = 0;
 	}
 

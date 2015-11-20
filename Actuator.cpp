@@ -13,8 +13,8 @@ typedef enum directions {
 	FORWARD, BACKWARD, LEFT, RIGHT
 };
 
-int currentLeftSpeed;
-int currentRightSpeed;
+//int currentLeftSpeed;
+//int currentRightSpeed;
 
 void initActuators() {
 	pinMode(MOTORAIN1, OUTPUT);
@@ -120,54 +120,54 @@ void drive(int leftSpeed, int rightSpeed)
 }
 
 // --------------------------------------------------------------------
-void driveIncremental(int leftSpeed, int rightSpeed){
-	int left = capSpeed(leftSpeed);
-	int right = capSpeed(rightSpeed);
-
-	LOGd(3, "drive(%d, %d)", leftSpeed, rightSpeed);
-
-	setDirection(&left, &right);
-
-	int increment = 50; //move in increments of 50
-	int diffLeft = left-currentLeftSpeed;
-	int diffRight = right-currentRightSpeed;
-
-	if (abs(diffLeft) > increment || abs(diffRight)>increment){
-		int signLeft = diffLeft/abs(diffLeft);
-		int signRight = diffRight/abs(diffRight);
-		int scale;
-		if(abs(diffLeft)>abs(diffRight)){
-			scale = abs(currentRightSpeed)/(abs(diffRight)-(abs(currentRightSpeed%increment)));
-			left = currentLeftSpeed+increment*signLeft;
-			right = currentRightSpeed+diffRight*scale*signRight;
-		} else {
-			scale = abs(currentLeftSpeed)/(abs(diffLeft)-(abs(currentLeftSpeed%increment)));
-			left = currentLeftSpeed+diffLeft*scale*signLeft;
-			right = currentRightSpeed+increment*signRight;
-		}
-	}
-
-
-	analogWrite(MOTORAPWM, left);
-	analogWrite(MOTORBPWM, right);
-	digitalWrite(MOTORSTDBY,HIGH); // enable motors
-
-	currentLeftSpeed = left;
-	currentRightSpeed = right;
-}
+//void driveIncremental(int leftSpeed, int rightSpeed){
+//	int left = capSpeed(leftSpeed);
+//	int right = capSpeed(rightSpeed);
+//
+//	LOGd(3, "drive(%d, %d)", leftSpeed, rightSpeed);
+//
+//	setDirection(&left, &right);
+//
+//	int increment = 50; //move in increments of 50
+//	int diffLeft = left-currentLeftSpeed;
+//	int diffRight = right-currentRightSpeed;
+//
+//	if (abs(diffLeft) > increment || abs(diffRight)>increment){
+//		int signLeft = diffLeft/abs(diffLeft);
+//		int signRight = diffRight/abs(diffRight);
+//		int scale;
+//		if(abs(diffLeft)>abs(diffRight)){
+//			scale = abs(currentRightSpeed)/(abs(diffRight)-(abs(currentRightSpeed%increment)));
+//			left = currentLeftSpeed+increment*signLeft;
+//			right = currentRightSpeed+diffRight*scale*signRight;
+//		} else {
+//			scale = abs(currentLeftSpeed)/(abs(diffLeft)-(abs(currentLeftSpeed%increment)));
+//			left = currentLeftSpeed+diffLeft*scale*signLeft;
+//			right = currentRightSpeed+increment*signRight;
+//		}
+//	}
+//
+//
+//	analogWrite(MOTORAPWM, left);
+//	analogWrite(MOTORBPWM, right);
+//	digitalWrite(MOTORSTDBY,HIGH); // enable motors
+//
+//	currentLeftSpeed = left;
+//	currentRightSpeed = right;
+//}
 
 // --------------------------------------------------------------------
-void domove(int drivespeed) {
-	digitalWrite(MOTORSTDBY,HIGH); // enable motors
-
-	analogWrite(MOTORAPWM, drivespeed);
-	analogWrite(MOTORBPWM, drivespeed);
-}
+//void domove(int drivespeed) {
+//	digitalWrite(MOTORSTDBY, HIGH); // enable motors
+//
+//	analogWrite(MOTORAPWM, drivespeed);
+//	analogWrite(MOTORBPWM, drivespeed);
+//}
 
 // --------------------------------------------------------------------
 void dostop() {
 	//  LOGd("\tmotor stop");
-	digitalWrite(MOTORSTDBY,LOW); // disable motors
+	digitalWrite(MOTORSTDBY, LOW); // disable motors
 }
 
 // --------------------------------------------------------------------
