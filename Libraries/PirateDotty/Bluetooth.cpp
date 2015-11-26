@@ -74,10 +74,6 @@ void onCustom(aJsonObject* json) {
 void handleInput(int incoming) {
 
 	switch(incoming) {
-	case 'r':
-		LOGi(1, "rebooting ...");
-		_reboot_Teensyduino_();
-		break;
 	case 'w':
 		onDrive(55, 55);
 		break;

@@ -11,19 +11,7 @@
 
 #include "Debug.h"
 #include "Pinout.h"
-//#include "aJSON.h"
 #include "Log.h"
-
-//end of add your includes here
-#ifdef __cplusplus
-extern "C" {
-#endif
-void loop();
-void setup();
-void init();
-#ifdef __cplusplus
-} // extern "C"
-#endif
 
 //add your function definitions for the project PirateDotty here
 
@@ -32,6 +20,9 @@ void init();
 
 extern bool isRemoteControl;
 extern long lastActivity;
+
+void initDotty();
+void loopDotty();
 
 
 //Do not add code below this line

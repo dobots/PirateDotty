@@ -34,6 +34,7 @@
 void initSensors(){
 	pinMode(BATTERY_SENSOR,INPUT);
 	pinMode(DISTANCE_SENSOR, INPUT);
+	pinMode(LIGHT_SENSOR, INPUT);
 }
 
 void readSensors(){

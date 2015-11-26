@@ -4,7 +4,7 @@
  * @brief:
  * @file: IRHandler.h
  *
- * @desc: 
+ * @desc:
  *
  * This file is created at Almende B.V. and Distributed Organisms B.V. It is open-source software and belongs to a
  * larger suite of software that is meant for research on self-organization principles and multi-agent systems where

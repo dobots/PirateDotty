@@ -1,7 +1,7 @@
 /**
  * 456789------------------------------------------------------------------------------------------------------------120
  *
- * @brief 
+ * @brief
  * @file IRHoming.cpp
  *
  * This file is created at Almende B.V. and Distributed Organisms B.V. It is open-source software and belongs to a
@@ -18,10 +18,10 @@
  *
  * @author    dominik
  * @date      Jan 22, 2014
- * @project   
+ * @project
  * @company   Almende B.V.
  * @company   Distributed Organisms B.V.
- * @case      
+ * @case
  */
 
 #include "IRHoming.h"
@@ -48,7 +48,7 @@ int ROTATE_HOMING_SPEED = 40;
 //int DEFAULT_HOMING_SPEED = 90;	//this speed works on samsGalaxy & nexus7....NOT xperia's
 int DEFAULT_HOMING_SPEED = 40;
 
-int lastDirection = 1;		// toggles between 1 and -1 for direction left & right
+int lastDirection = -1;		// toggles between 1 and -1 for direction left & right
 int lastCheck = millis();
 int lastControl = millis();
 int lastSwitch = millis();
@@ -158,25 +158,24 @@ int IRhomeWalk(){
 //					sendLog("4");
 				}
 			} else if (millis() >= lastControl + recvTimeout) {
-				if (lastHoming == 1 && errorCount < 4) {
-//					if (lastValue == correctValue && errorCount < 4) {
-					LOGd(2, "  homing change rotation");
-
-					lastControl = millis();
-					lastDirection *= -1;
-					++errorCount;
-					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
-					lastHoming = 2;
-//					sendLog("5");
-				} else if (lastHoming == 0 || lastHoming == 5) {
-//					LOGd(2, "  homing bwd");
-					LOGd(2, "  homing rot");
+//				if (lastHoming == 1 && errorCount < 4) {
+////					if (lastValue == correctValue && errorCount < 4) {
+//					LOGd(2, "  homing change rotation");
+//
+//					lastControl = millis();
+//					lastDirection *= -1;
+//					++errorCount;
+//					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+//					lastHoming = 2;
+////					sendLog("5");
+//				} else
+					if (lastHoming == 0 || lastHoming == 5) {
+					LOGd(2, "  homing bwd");
 
 					lastControl = millis() + recvTimeout / 2;
 					lastValue = -1;
 					errorCount = 0;
-//					doDrive(-1*DEFAULT_HOMING_SPEED, -1*DEFAULT_HOMING_SPEED);
-					doDrive(lastDirection*ROTATE_HOMING_SPEED,-1*lastDirection*ROTATE_HOMING_SPEED);
+					doDrive(-1*DEFAULT_HOMING_SPEED, -0.6*DEFAULT_HOMING_SPEED);
 					lastHoming = 3;
 //					sendLog("6");
 				} else {
@@ -203,6 +202,8 @@ int IRhomeWalk(){
 		}
 
 	}
+
+	return waitPeriod;
 
 	/* 17:19, 14.08.14
 	void IRhomeWalk(){

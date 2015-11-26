@@ -2,16 +2,11 @@
 
 #include "Actuator.h"
 #include "Bluetooth.h"
-#include "IRHoming.h"
-#include "Log.h"
-#include "Pinout.h"
-#include "RandomWalk.h"
 #include "Sensor.h"
-#include "IRHandler.h"
-#include "Gunner.h"
 #include "Looper.h"
 #include "ObstacleDetection.h"
 #include "DriveControl.h"
+#include "RandomWalk.h"
 
 bool isRemoteControl = true;
 long lastActivity = 0;
@@ -20,40 +15,13 @@ bool homing=true;
 bool randoming=false;
 bool dismount = false;
 
-//The setup function is called once at startup of the sketch
-void setup()
-{
-	Serial.begin(115200); // USB
-//	Serial1.begin(115200);
-	Serial2.begin(115200);	// Bluetooth
+int readLight() {
 
-#ifdef BT_SERIAL
-	initLogging(&Serial2);
-#else
-	initLogging(&Serial);
-#endif
+	int valueLightSensor2 = analogRead(LIGHT_SENSOR);
 
-	initBluetooth(&Serial2);
+	LOGi(0, "light: %4d", valueLightSensor2);
 
-	initSensors();
-	initActuators();
-	initRandomWalk();
-
-	IRHandler::getInstance()->initialize();
-
-	initIRHoming();
-
-	ledON(STATE_LED);
-
-//	pinMode(A14,INPUT);
-
-//	for(int i=0;i<23;i++){
-//		pinMode(UNUSED[i],OUTPUT);
-//	}
-
-	init();
-
-	LOGi(0, "\n\n\n\n\ninitialisation done ...");
+	return 500;
 }
 
 bool close = false;
@@ -89,7 +57,7 @@ int checkDistance() {
 	return 500;
 }
 
-void init() {
+void initLoopers() {
 	// read bluetooth
 	Looper::registerLoopFunc(receiveCommands);
 	// handle drive commands
@@ -104,8 +72,41 @@ void init() {
 //	Looper::registerLoopFunc(IRHandler::loop);
 }
 
+//The setup function is called once at startup of the sketch
+void initDotty()
+{
+	Serial.begin(115200); // USB
+//	Serial1.begin(115200);
+	Serial2.begin(115200);	// Bluetooth
+
+#ifdef BT_SERIAL
+	initLogging(&Serial2);
+#else
+	initLogging(&Serial);
+#endif
+
+	initBluetooth(&Serial2);
+
+	initSensors();
+	initActuators();
+	initRandomWalk();
+
+	ledON(STATE_LED);
+
+//	pinMode(A14,INPUT);
+
+//	for(int i=0;i<23;i++){
+//		pinMode(UNUSED[i],OUTPUT);
+//	}
+
+	initLoopers();
+
+	LOGi(0, "\n\n\n\n\ninitialisation done ...");
+	LOGi(0, "hello");
+}
+
 // The loop function is called in an endless loop
-void loop()
+void loopDotty()
 {
 	// don't disable this, currently handles:
 	// - receiveCommands()
