@@ -6,8 +6,10 @@
 #include <Log.h>
 
 void setup() {
-  Serial2.begin(115200); // USB
+//  Serial.begin(115200); // USB
+  Serial2.begin(115200); // Bluetooth
   
+  // change to Serial for logging over USB
   initLogging(&Serial2);
   
   // put your setup code here, to run once:
@@ -17,15 +19,16 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  
-  LOGi(0, "distance: %4d", getDistance());
 
-  if (obstacleDetected()) {
-//    drive(-100, -100);
-    setDriveSpeeds(-100, -100);
+  int distance = getDistance();
+  LOGi(0, "distance: %4d", distance);
+
+  if (distance < 800) {
+//    drive(0, 0);
+//    setDriveSpeeds(0, 0);
   } else {
-    setDriveSpeeds(100, 100);
 //    drive(100, 100);
+//    setDriveSpeeds(100, 100);
   }
 
 //  driveControl();
