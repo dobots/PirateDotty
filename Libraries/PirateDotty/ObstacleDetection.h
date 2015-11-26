@@ -34,9 +34,9 @@
 // CONFIG
 //-------------------------------------------------------------------
 
-#define CLOSE_THRESHOLD 450
-#define FAR_THRESHOLD 150
-#define OBSTACLE_DETECTION_THRESHOLD 80
+#define CLOSE_THRESHOLD 300
+#define FAR_THRESHOLD 800
+#define OBSTACLE_DETECTION_THRESHOLD 900
 
 //-------------------------------------------------------------------
 // FUNCTIONS

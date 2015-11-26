@@ -43,6 +43,7 @@ void readSensors(){
 
 int getDistance() {
 	int value = analogRead(DISTANCE_SENSOR);
+	value = 1024-value;
 //	LOGd(3, "distance: %4d", value);
 	return value;
 }
