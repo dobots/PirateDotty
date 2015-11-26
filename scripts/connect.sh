@@ -89,6 +89,7 @@ if [[ -z $go_on ]]; then
 	done
 
 	print "-> connection ok" $GREEN
+        sudo chmod o+rw /dev/rfcomm$PORTNR
 	
 else 
 	print "-> already connected" $GREEN
