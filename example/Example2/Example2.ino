@@ -62,8 +62,8 @@ void loop() {
     dealWithObstacle();
   }
   else {
-    // No obstable, so let's drive
-    randomDrive();
+    // No obstable, so let's search for the light
+    searchLight();
   }
 
   // Stop and wait some time, so we can better see what happens
@@ -122,16 +122,51 @@ void dealWithObstacle() {
 }
 
 
-// Drive forward randomly
-void randomDrive() {
-  // Drive forward with a random turn
+// Should drive towards the light
+void searchLight() {
+    // Example: we simply turn randomly and drive straight afterwards
+    int leftSpeed;
+    int rightSpeed;
 
-  // Both left and right speed will be chosen randomly between 0 and maxSpeed
-  int leftSpeed = random(0, maxSpeed);
-  int rightSpeed = random(0, maxSpeed);
+    // Get a 1 or 0 at random:
+    int direction = random(0, 1);
 
-  // Actually make the motors drive this speed for some time
-  drive(leftSpeed, rightSpeed);
-  delay(300);
+    // The random variable "direction" determines if we turn left or right
+    if (direction == 1) {
+      // Turn right
+      leftSpeed  = maxSpeed;
+      rightSpeed = -maxSpeed;
+    }
+    else {
+      // Turn left
+      leftSpeed  = -maxSpeed;
+      rightSpeed = maxSpeed;
+    }
+
+    // Actually make the motors drive this speed
+    drive(leftSpeed, rightSpeed);
+    
+    // Wait for 250 ms to 500 ms so that it actually turns for some time
+    int driveTime = random(250, 500);
+    delay(driveTime);
+
+    // Read and print sensors again
+    LOGi(0, "After turning");
+    readAndPrintSensors();
+    
+    // Stop and wait some time, so we can better see what happens
+    drive(0, 0);
+    delay(1000);
+    
+    // After turning: drive straight for 300ms
+    if (lightVal < previousLightVal) {
+      // If the current light value is lower than the previous: drive backwards
+      drive(-maxSpeed, -maxSpeed);
+    }
+    else {
+      // If the current light value is larger or equal: drive forwards
+      drive(maxSpeed, maxSpeed);
+    }
+    delay(300);
 }
 
