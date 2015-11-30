@@ -71,24 +71,7 @@ void loop() {
   delay(1000);
 
   // This part checks if data was sent and reads it if so.
-  while (SERIAL.available() > 0) {
-    // If so, we check what data was sent:
-    // a "h" sets maxSpeed to 0, so that the robot stops driving
-    // a "g" sets maxSpeed to SPEED_MAX, so that the robot starts driving
-    int readByte = SERIAL.read();
-    switch(readByte) {
-      case 104: // h
-      case 72:  // H
-        maxSpeed = 0;
-        LOGi(0, "Halting motors");
-        break;
-      case 103: // g
-      case 71:  // G
-        maxSpeed = SPEED_MAX;
-        LOGi(0, "GO!");
-        break;
-    }
-  }
+  readSerial();
 
   // Remember the light value, so we can compare it
   previousLightVal = lightVal;
@@ -168,5 +151,28 @@ void searchLight() {
       drive(maxSpeed, maxSpeed);
     }
     delay(300);
+}
+
+
+// Reads serial and handles the data
+void readSerial() {
+  while (SERIAL.available() > 0) {
+    // If so, we check what data was sent:
+    // a "h" sets maxSpeed to 0, so that the robot stops driving
+    // a "g" sets maxSpeed to SPEED_MAX, so that the robot starts driving
+    int readByte = SERIAL.read();
+    switch(readByte) {
+      case 104: // h
+      case 72:  // H
+        maxSpeed = 0;
+        LOGi(0, "Halting motors");
+        break;
+      case 103: // g
+      case 71:  // G
+        maxSpeed = SPEED_MAX;
+        LOGi(0, "GO!");
+        break;
+    }
+  }
 }
 
