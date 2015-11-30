@@ -27,11 +27,20 @@
 #ifndef SENSOR_H_
 #define SENSOR_H_
 
+#define LIGHT_SENSOR_HIST_SIZE 5
+// Maximum age of measurement to be used (ms)
+// Also determines how quick the filter adapts to new measurements!
+#define LIGHT_SENSOR_HIST_MAX_DT 1000
+
+
 void initSensors();
 void readSensors();
 
 int readBatteryState();
 int getDistance();
+
+int readLightSensor();
+int getFilteredLightLevel();
 
 void sendSensorData();
 

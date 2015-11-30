@@ -31,6 +31,9 @@
 #include "protocol.h"
 #include "IRHandler.h"
 
+int lightMeasurements[LIGHT_SENSOR_HIST_SIZE] = {0};
+unsigned long lightMeasurementTimestamps[LIGHT_SENSOR_HIST_SIZE] = {0};
+
 void initSensors(){
 	pinMode(BATTERY_SENSOR,INPUT);
 	pinMode(DISTANCE_SENSOR, INPUT);
@@ -46,6 +49,51 @@ int getDistance() {
 	value = 1024-value;
 //	LOGd(3, "distance: %4d", value);
 	return value;
+}
+
+int readLightSensor() {
+	int value = analogRead(LIGHT_SENSOR);
+	unsigned long timestamp = millis();
+	
+	// Shift history
+	for (int i=0; i<LIGHT_SENSOR_HIST_SIZE-1; i++) {
+		lightMeasurements[i] = lightMeasurements[i+1];
+		lightMeasurementTimestamps[i] = lightMeasurementTimestamps[i+1];
+	}
+	// Store last measurement at the back
+	lightMeasurements[LIGHT_SENSOR_HIST_SIZE-1] = value;
+	lightMeasurementTimestamps[LIGHT_SENSOR_HIST_SIZE-1] = timestamp;
+	return value;
+}
+
+int getFilteredLightLevel() {
+	unsigned long now = millis();
+	
+	// If the last measurement was too long ago, just return last measurement
+	if (now - lightMeasurementTimestamps[LIGHT_SENSOR_HIST_SIZE-1] > LIGHT_SENSOR_HIST_MAX_DT) {
+		return lightMeasurements[LIGHT_SENSOR_HIST_SIZE-1];
+	}
+	
+	unsigned long sum = 0;
+	unsigned long sumWeights = 0;
+	// Weighted sum: measurements longer ago have a lower weight
+	for (int i=LIGHT_SENSOR_HIST_SIZE-1; i>=0; i--) {
+		unsigned long timediff = (now - lightMeasurementTimestamps[i]);
+		if (timediff > LIGHT_SENSOR_HIST_MAX_DT) {
+			break;
+		}
+		// Weight is based on squared time difference
+		// Make sure this doesn't overflow the sum!
+		unsigned long weight = (LIGHT_SENSOR_HIST_MAX_DT - timediff)/100;
+		weight *= weight;
+		sum += weight*lightMeasurements[i];
+		sumWeights += weight;
+//		LOGi(0, "timediff=%4d  weight=%6d  sum=%6d  sumWeights=%6d", timediff, weight, sum, sumWeights);
+	}
+	// Normalize: divide weighted sum by sum of weights
+//	return sum / (LIGHT_SENSOR_HIST_SIZE * (LIGHT_SENSOR_HIST_SIZE+1) * (2*LIGHT_SENSOR_HIST_SIZE+1) / 6);
+//	LOGi(0, "sum=%6d sumWeights=%6d", sum, sumWeights);
+	return sum / sumWeights;
 }
 
 int readBatteryState(){
