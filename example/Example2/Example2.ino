@@ -1,19 +1,18 @@
 #include <Sensor.h>
 #include <ObstacleDetection.h>
 #include <Actuator.h>
-#include <DriveControl.h>
 #include <Pinout.h>
 #include <Log.h>
 
-// The maximum speed
-#define SPEED_MAX 50
+// The maximum speed of the motors
+#define SPEED_MAX 70
 
 // Choose which serial port we will use
 //#define SERIAL Serial // USB
 #define SERIAL Serial2 // Bluetooth
 
 // This variable will be the current maximum speed.
-// Setting this to 0 will disable driving.
+// Setting this to 0 will make the robot stop driving.
 int maxSpeed = 0;
 
 // This variable is used to store the current measurment of the raw light level value.
@@ -66,8 +65,8 @@ void loop() {
     searchLight();
   }
 
-  // Stop and wait some time, so we can better see what happens
-  drive(0, 0);
+  // Set speed to 0 and pause the program for 1000ms (1 second), so we can better see what happens
+  setMotorSpeed(0, 0);
   delay(1000);
 
   // This part checks if data was sent and reads it if so.
@@ -76,7 +75,7 @@ void loop() {
   // Remember the light value, so we can compare it
   previousLightVal = lightVal;
 
-  // Wait a little bit, so that the loop doesn't go too fast
+  // Pause the program for a short while, so that the loop doesn't go too fast
   delay(100);
 }
 
@@ -100,8 +99,8 @@ void readAndPrintSensors() {
 // What to do when something is in front of the robot
 void dealWithObstacle() {
   // Example: simly stop the robot.
-  // Left motor and right moter should drive with speed 0
-  drive(0, 0);
+  // Left motor and right moter speed should be 0
+  setMotorSpeed(0, 0);
 }
 
 
@@ -117,19 +116,19 @@ void searchLight() {
     // The random variable "direction" determines if we turn left or right
     if (direction == 1) {
       // Turn right
-      leftSpeed  = maxSpeed;
-      rightSpeed = -maxSpeed;
+      leftSpeed  = SPEED_MAX;
+      rightSpeed = -SPEED_MAX;
     }
     else {
       // Turn left
-      leftSpeed  = -maxSpeed;
-      rightSpeed = maxSpeed;
+      leftSpeed  = -SPEED_MAX;
+      rightSpeed = SPEED_MAX;
     }
 
-    // Actually make the motors drive this speed
-    drive(leftSpeed, rightSpeed);
+    // Actually set the motor speeds
+    setMotorSpeed(leftSpeed, rightSpeed);
     
-    // Wait for 250 ms to 500 ms so that it actually turns for some time
+    // Pause the program for 250 ms to 500 ms to let the robot turn for some time
     int driveTime = random(250, 500);
     delay(driveTime);
 
@@ -137,20 +136,43 @@ void searchLight() {
     LOGi(0, "After turning");
     readAndPrintSensors();
     
-    // Stop and wait some time, so we can better see what happens
-    drive(0, 0);
+    // Set speed to 0 and pause the program for 1000ms (1 second), so we can better see what happens
+    setMotorSpeed(0, 0);
     delay(1000);
     
     // After turning: drive straight for 300ms
     if (lightVal < previousLightVal) {
       // If the current light value is lower than the previous: drive backwards
-      drive(-maxSpeed, -maxSpeed);
+      setMotorSpeed(-SPEED_MAX, -SPEED_MAX);
     }
     else {
       // If the current light value is larger or equal: drive forwards
-      drive(maxSpeed, maxSpeed);
+      setMotorSpeed(SPEED_MAX, SPEED_MAX);
     }
+    // Pause the program for 300ms (0.3 seconds) to let the robot drive for some time
     delay(300);
+}
+
+
+////////////////////////////////////////////////
+// You don't have to read the functions below //
+////////////////////////////////////////////////
+
+// Set the speed of the motors, while making sure they don't go faster than maxSpeed
+void setMotorSpeed(int leftSpeed, int rightSpeed) {
+  if (leftSpeed > 0) {
+    leftSpeed = min(leftSpeed, maxSpeed);
+  }
+  else {
+    leftSpeed = max(leftSpeed, -maxSpeed);
+  }
+  if (rightSpeed > 0) {
+    rightSpeed = min(rightSpeed, maxSpeed);
+  }
+  else {
+    rightSpeed = max(rightSpeed, -maxSpeed);
+  }
+  drive(leftSpeed, rightSpeed);
 }
 
 
