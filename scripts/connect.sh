@@ -35,7 +35,7 @@ function showUsage {
 	echo
 }
 
-echo "$@"
+#echo "$@"
 
 # check for option arguments
 while getopts ":t:p:h" optname; do
@@ -57,6 +57,10 @@ while getopts ":t:p:h" optname; do
 	esac
 done
 
+if [[ -z $TARGET && -f 'arduino_ip.txt' ]]; then
+	TARGET=`cat arduino_ip.txt`
+fi
+
 if [ -z $TARGET ]; then
 	print "FATAL: need to provide a address as parameter -t, use -h for usage information" $RED
 	exit 1
@@ -71,9 +75,9 @@ if [[ -z $go_on ]]; then
 
 	# start rfcomm connect in another shell
 	sudo rfcomm connect /dev/rfcomm$PORTNR $TARGET > /dev/null &
-	
+
 	sleep 1
-	
+
 	# wait for connection to be established. wait at most 10 seconds
 	declare -i COUNTER
 	COUNTER=0
@@ -89,7 +93,7 @@ if [[ -z $go_on ]]; then
 	done
 
 	print "-> connection ok" $GREEN
-	
-else 
+
+else
 	print "-> already connected" $GREEN
 fi
