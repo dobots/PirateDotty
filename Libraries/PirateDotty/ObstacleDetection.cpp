@@ -41,20 +41,20 @@
 // PUBLIC
 
 bool isClose() {
-	return getDistance() > CLOSE_THRESHOLD;
+	return getDistance() <= CLOSE_THRESHOLD;
 }
 
 bool isMidrange() {
 	int distance = getDistance();
-	return distance < CLOSE_THRESHOLD && distance > FAR_THRESHOLD;
+	return distance > CLOSE_THRESHOLD && distance <= FAR_THRESHOLD;
 }
 
 bool isFar() {
-	return getDistance() < FAR_THRESHOLD;
+	return getDistance() > FAR_THRESHOLD;
 }
 
 bool obstacleDetected() {
-	return getDistance() > OBSTACLE_DETECTION_THRESHOLD;
+	return getDistance() < OBSTACLE_DETECTION_THRESHOLD;
 }
 
 // PRIVATE

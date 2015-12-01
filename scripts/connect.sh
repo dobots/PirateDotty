@@ -75,9 +75,9 @@ if [[ -z $go_on ]]; then
 
 	# start rfcomm connect in another shell
 	sudo rfcomm connect /dev/rfcomm$PORTNR $TARGET > /dev/null &
-
+	
 	sleep 1
-
+	
 	# wait for connection to be established. wait at most 10 seconds
 	declare -i COUNTER
 	COUNTER=0
@@ -93,7 +93,8 @@ if [[ -z $go_on ]]; then
 	done
 
 	print "-> connection ok" $GREEN
-
-else
+        sudo chmod o+rw /dev/rfcomm$PORTNR
+	
+else 
 	print "-> already connected" $GREEN
 fi
